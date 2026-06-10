@@ -7,4 +7,4 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://pjc3916.github.io/haegwang/sitemap.xml
+Sitemap: https://whdcks498.github.io/haegwang/sitemap.xml
