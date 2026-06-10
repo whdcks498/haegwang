@@ -1915,9 +1915,15 @@
 
   function setSelectValue(id, val){
     const sel = document.getElementById(id); if(!sel) return;
+    /* 1차: 정확히 일치 */
+    for(const o of sel.options){ if(o.value===val || o.text===val){ sel.value = o.value; return; } }
+    /* 2차: 톤수 토큰 정확 일치 (예: '5톤'이 '2.5톤'에 잘못 매칭되지 않도록) */
     const tk = tonOf(val);
-    for(const o of sel.options){
-      if(o.value===val || o.text===val || (tk && o.text.indexOf(tk)>-1)){ sel.value = o.value; return; }
+    if(tk){
+      for(const o of sel.options){
+        const ot = o.text.match(/[0-9]+(?:\.[0-9]+)?톤/g) || [];
+        if(ot.includes(tk)){ sel.value = o.value; return; }
+      }
     }
   }
 
