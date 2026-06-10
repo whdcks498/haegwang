@@ -1445,10 +1445,13 @@
     document.querySelector('.btn-join').onclick = function(e){
       e.preventDefault(); doLogout();
     };
+    /* 모든 공고 카드에 수정/삭제 버튼 표시 */
+    renderAdminControls();
   }
 
   function doLogout(){
     isAdmin = false;
+    removeAdminControls();
     document.getElementById('adminBar').style.display = 'none';
     document.querySelector('.btn-login').textContent = '로그인';
     document.querySelector('.btn-login').style.background = '';
@@ -1534,7 +1537,7 @@
      관리자 액션 (상단 관리자 바)
   ════════════════════════════════════════ */
   function adminAction(type){
-    if(type === 'addJob')       openModal('modalAdminJob');
+    if(type === 'addJob')       openAddJob();
     else if(type === 'editSite') openModal('modalAdminEdit');
     else if(type === 'viewApp')  window.open(FORMS_URL, '_blank');
     else if(type === 'logout')   doLogout();
@@ -1623,6 +1626,10 @@
     if(!list) return;
     const card = document.createElement('div');
     card.className = 'job-card';
+    card.dataset.jid = 'a' + job.ts;
+    card.dataset.admin = '1';
+    if(job.type)   card.dataset.type = (String(job.type).match(/[0-9]+(?:\.[0-9]+)?톤/)||[job.type])[0];
+    if(job.region) card.dataset.region = job.region;
     if(job.image) card.dataset.image = job.image;
     if(job.desc)  card.dataset.desc = job.desc;
     card.innerHTML =
@@ -1645,6 +1652,7 @@
     if(prepend) list.prepend(card); else list.appendChild(card);
     card.dataset.wired = '';
     wireJobCards();
+    if(isAdmin) renderAdminControls();
   }
 
   function saveAdminJob(){
@@ -1656,6 +1664,26 @@
     const desc    = document.getElementById('aj_desc').value.trim();
     if(!company || !title){ alert('회사명과 공고 제목을 입력해 주세요.'); return; }
     if(!desc){ alert('상세 구인공고 내용을 입력해 주세요.'); document.getElementById('aj_desc').focus(); return; }
+    /* ── 수정 모드 ── */
+    if(editingJid){
+      const d = { company, title, type, region, salary, desc };
+      const card = document.querySelector('.job-list .job-card[data-jid="' + editingJid + '"]');
+      if(card) applyCardData(card, d);
+      if(editingJid[0] === 'a'){
+        const ts = editingJid.slice(1);
+        const jobs = loadAdminJobs().map(j=>String(j.ts)===String(ts) ? Object.assign({}, j, d, {image: currentJobImage || j.image}) : j);
+        try{ localStorage.setItem(JOBS_KEY, JSON.stringify(jobs)); }catch(e){}
+      } else {
+        const edits = loadEdits(); edits[editingJid] = d; saveEdits(edits);
+      }
+      editingJid = null;
+      closeModal('modalAdminJob');
+      showSuccess('✅','공고 수정 완료!', '"' + title + '" 공고가 수정되었습니다.');
+      document.getElementById('aj_title').value = '';
+      document.getElementById('aj_desc').value = '';
+      clearImg();
+      return;
+    }
     const job = { company, title, type, region, salary, desc, image: currentJobImage, ts: Date.now() };
     const jobs = loadAdminJobs();
     jobs.unshift(job);
@@ -1805,6 +1833,136 @@
   }
 
   /* ════════════════════════════════════════
+     관리자: 공고 수정 / 삭제 관리
+  ════════════════════════════════════════ */
+  const DELETED_KEY = 'haegwang_deleted_ids';
+  const EDITS_KEY   = 'haegwang_job_edits';
+  let editingJid = null;
+
+  function loadDeleted(){ try{ return JSON.parse(localStorage.getItem(DELETED_KEY)||'[]'); }catch(e){ return []; } }
+  function saveDeleted(a){ try{ localStorage.setItem(DELETED_KEY, JSON.stringify(a)); }catch(e){} }
+  function loadEdits(){ try{ return JSON.parse(localStorage.getItem(EDITS_KEY)||'{}'); }catch(e){ return {}; } }
+  function saveEdits(o){ try{ localStorage.setItem(EDITS_KEY, JSON.stringify(o)); }catch(e){} }
+
+  /* 모든 카드에 안정적 ID 부여 (동적: a+ts, 정적: s+순번) */
+  function assignJobIds(){
+    let i = 0;
+    document.querySelectorAll('.job-list .job-card').forEach(card=>{
+      if(card.dataset.jid) return;
+      card.dataset.jid = 's' + (i++);
+    });
+  }
+
+  function tonOf(v){ return (String(v).match(/[0-9]+(?:\.[0-9]+)?톤/)||[v])[0]; }
+
+  function readCardData(card){
+    const types = [...card.querySelectorAll('.badge-type')].map(b=>b.textContent.trim());
+    return {
+      company: (card.querySelector('.job-company')||{}).textContent || '',
+      title:   (card.querySelector('.job-title')||{}).textContent || '',
+      type:    types[0] || '전 차종',
+      region:  ((card.querySelector('.badge-region')||{}).textContent||'').replace('📍','').trim() || '전국',
+      salary:  (card.querySelector('.job-salary .amount')||{}).textContent || '',
+      desc:    card.dataset.desc || ((card.querySelector('.job-desc')||{}).textContent||'').trim()
+    };
+  }
+
+  function applyCardData(card, d){
+    const t = card.querySelector('.job-title');   if(t) t.textContent = d.title;
+    const c = card.querySelector('.job-company');  if(c) c.textContent = d.company;
+    const amt = card.querySelector('.job-salary .amount'); if(amt) amt.textContent = d.salary || '협의';
+    const bt = card.querySelector('.badge-type');  if(bt) bt.textContent = d.type;
+    const br = card.querySelector('.badge-region'); if(br) br.textContent = '📍 ' + d.region;
+    card.dataset.type = tonOf(d.type);
+    card.dataset.region = d.region;
+    card.dataset.desc = d.desc;
+    let dn = card.querySelector('.job-desc');
+    if(!dn){ dn = document.createElement('div'); dn.className = 'job-desc'; dn.style.display = 'none'; card.appendChild(dn); }
+    dn.textContent = d.desc;
+  }
+
+  /* 저장된 삭제/수정 내역 적용 (페이지 로드 시) */
+  function applyAdminChanges(){
+    const del = loadDeleted();
+    const edits = loadEdits();
+    document.querySelectorAll('.job-list .job-card').forEach(card=>{
+      const jid = card.dataset.jid;
+      if(del.includes(jid)){ card.remove(); return; }
+      if(edits[jid]) applyCardData(card, edits[jid]);
+    });
+  }
+
+  /* 관리자 컨트롤(수정/삭제 버튼) */
+  function renderAdminControls(){
+    if(!isAdmin) return;
+    assignJobIds();
+    document.querySelectorAll('.job-list .job-card').forEach(card=>{
+      if(card.querySelector('.admin-ctrl')) return;
+      const bar = document.createElement('div');
+      bar.className = 'admin-ctrl';
+      bar.style.cssText = 'display:flex;gap:8px;margin-top:10px;border-top:1px dashed #ddd;padding-top:8px';
+      bar.innerHTML =
+        '<button type="button" class="ac-edit" style="flex:1;padding:7px;background:#2563c8;color:#fff;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-size:12px">✏️ 수정</button>' +
+        '<button type="button" class="ac-del" style="flex:1;padding:7px;background:#FF3B30;color:#fff;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-size:12px">🗑️ 삭제</button>';
+      bar.querySelector('.ac-edit').addEventListener('click', function(e){ e.stopPropagation(); startEditJob(card); });
+      bar.querySelector('.ac-del').addEventListener('click', function(e){ e.stopPropagation(); deleteJob(card); });
+      card.appendChild(bar);
+    });
+  }
+  function removeAdminControls(){
+    document.querySelectorAll('.job-list .admin-ctrl').forEach(b=>b.remove());
+  }
+
+  function setSelectValue(id, val){
+    const sel = document.getElementById(id); if(!sel) return;
+    const tk = tonOf(val);
+    for(const o of sel.options){
+      if(o.value===val || o.text===val || (tk && o.text.indexOf(tk)>-1)){ sel.value = o.value; return; }
+    }
+  }
+
+  function startEditJob(card){
+    editingJid = card.dataset.jid;
+    const d = readCardData(card);
+    document.getElementById('aj_company').value = d.company;
+    document.getElementById('aj_title').value   = d.title;
+    document.getElementById('aj_salary').value  = d.salary;
+    document.getElementById('aj_desc').value    = d.desc;
+    setSelectValue('aj_type', d.type);
+    setSelectValue('aj_region', d.region);
+    const titleEl = document.querySelector('#modalAdminJob .modal-title');
+    if(titleEl) titleEl.textContent = '✏️ 공고 수정';
+    openModal('modalAdminJob');
+  }
+
+  function deleteJob(card){
+    if(!confirm('이 공고를 삭제할까요?\n(이 브라우저에서 숨겨집니다. 모든 방문자에게 영구 반영하려면 GitHub 저장이 필요합니다.)')) return;
+    const jid = card.dataset.jid;
+    if(jid && jid[0]==='a'){
+      const ts = jid.slice(1);
+      const jobs = loadAdminJobs().filter(j=>String(j.ts)!==String(ts));
+      try{ localStorage.setItem(JOBS_KEY, JSON.stringify(jobs)); }catch(e){}
+    } else {
+      const del = loadDeleted(); if(!del.includes(jid)){ del.push(jid); saveDeleted(del); }
+    }
+    card.remove();
+    updateCount(document.querySelectorAll('.job-list .job-card').length);
+    showSuccess('🗑️','삭제 완료','공고가 삭제되었습니다.');
+  }
+
+  function openAddJob(){
+    editingJid = null;
+    document.getElementById('aj_company').value = '해광 화물운송';
+    document.getElementById('aj_title').value = '';
+    document.getElementById('aj_salary').value = '월 400만↑';
+    document.getElementById('aj_desc').value = '';
+    clearImg();
+    const titleEl = document.querySelector('#modalAdminJob .modal-title');
+    if(titleEl) titleEl.textContent = '➕ 채용공고 등록';
+    openModal('modalAdminJob');
+  }
+
+  /* ════════════════════════════════════════
      초기화
   ════════════════════════════════════════ */
   document.addEventListener('DOMContentLoaded', function(){
@@ -1815,6 +1973,9 @@
     } catch(e){}
     /* 저장된 관리자 공고 복원 */
     loadAdminJobs().slice().reverse().forEach(job=>renderAdminJob(job, true));
+    /* ID 부여 후 저장된 수정/삭제 내역 반영 */
+    assignJobIds();
+    applyAdminChanges();
     /* 카드 / UI 컨트롤 연결 */
     wireJobCards();
     wireUiControls();
