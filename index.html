@@ -663,6 +663,53 @@
 
     <div class="job-list">
 
+      <!-- ▼ [자동등록 테스트] 서울 5톤 윙바디 ▼ -->
+      <div class="job-card" data-type="5톤" data-region="서울/경기">
+        <div class="badge-row">
+          <span class="badge badge-hot">HOT</span>
+          <span class="badge badge-urgent">급구</span>
+          <span class="badge badge-type">5톤</span>
+          <span class="badge badge-type">윙바디</span>
+          <span class="badge badge-region">📍 서울/경기</span>
+        </div>
+        <div class="job-company">해광 화물운송</div>
+        <div class="job-title">[서울] 5톤 윙바디 화물기사 모집 (상시·경력무관)</div>
+        <div class="job-info">
+          <div class="job-info-item">🗓 <strong>상시모집</strong></div>
+          <div class="job-info-item">🚚 5톤 윙바디 · 수도권 배송</div>
+          <div class="job-info-item">🌱 경력무관 · 초보/고령(70세) 환영</div>
+          <div class="job-info-item">📞 010-7233-3916</div>
+        </div>
+        <div class="job-salary">
+          <div class="amount">월 450~600만</div>
+          <div class="unit">경력별 협의</div>
+          <div class="job-deadline">상시</div>
+        </div>
+        <div class="job-desc" style="display:none">[모집부문] 5톤 윙바디 화물기사 — 서울/수도권 배송
+
+[담당업무]
+· 5톤 윙바디 차량 수도권 일반화물 배송 (상하차 보조 포함)
+· 거래처 정기배송 및 일반운송 업무
+
+[근무조건]
+· 급여: 월 450~600만원 (경력·노선에 따라 협의)
+· 근무: 주5~6일 / 오전 출근, 노선별 탄력근무 가능
+· 4대보험 가입, 명절 상여
+
+[자격요건]
+· 1종 보통/대형 운전면허, 화물운송종사자격증 소지
+· 경력무관 (초보·고령 70세까지 환영, 경력자 우대)
+
+[우대사항]
+· 5톤·윙바디 운행 경험자, 수도권 지리 숙지자
+
+[지원방법]
+· 홈페이지에서 이력서 등록 또는 전화/문자 (010-7233-3916)
+· 즉시 면접 및 조기 출근 가능
+
+※ 본 공고는 해광 화물운송이 직접 모집하는 공고입니다. (시세 참고용으로 작성된 테스트 공고)</div>
+      </div>
+
       <!-- 해광 공고 1 -->
       <div class="job-card">
         <div class="badge-row">
@@ -1543,6 +1590,10 @@
         const info   = [...card.querySelectorAll('.job-info-item')].map(b=>b.textContent.trim());
         let desc = card.dataset.desc || '';
         if(!desc){
+          const dn = card.querySelector('.job-desc');
+          if(dn) desc = dn.textContent.trim();
+        }
+        if(!desc){
           /* 상세 설명이 없는 기존 공고는 카드 정보로 자동 구성 */
           desc = info.join('\n') + '\n\n지원을 원하시면 아래 [이력서 등록하기] 또는 전화로 문의해 주세요.';
         }
@@ -1670,6 +1721,45 @@
     if(el) el.scrollIntoView({behavior:'smooth'});
   }
 
+  /* ════════════════════════════════════════
+     차종 / 톤수 / 지역 필터링
+  ════════════════════════════════════════ */
+  function tonToken(s){
+    if(!s) return '';
+    if(s.indexOf('특수') > -1) return '특수';
+    const m = s.match(/[0-9]+(\.[0-9]+)?\s*톤/);
+    return m ? m[0].replace(/\s/g,'') : '';
+  }
+  function updateCount(n){
+    const cnt = document.querySelector('.job-header .count');
+    if(cnt) cnt.textContent = '총 ' + n + '건의 공고';
+  }
+  function filterJobs(typeQ, regionQ, keywordQ){
+    const tk = tonToken(typeQ);
+    const regions = (regionQ||'').split('/').map(s=>s.trim()).filter(Boolean);
+    const kw = (keywordQ||'').trim();
+    let shown = 0;
+    document.querySelectorAll('.job-list .job-card').forEach(card=>{
+      const typeText   = [...card.querySelectorAll('.badge-type')].map(b=>b.textContent).join(' ').replace(/\s/g,'');
+      const regionText = (card.querySelector('.badge-region')||{}).textContent || '';
+      let ok = true;
+      const anyType = /전차종|전국/.test(typeText);
+      if(tk && !anyType) ok = ok && (typeText.indexOf(tk) > -1);
+      const anyRegion = regionText.indexOf('전국') > -1;
+      if(regions.length && !anyRegion) ok = ok && regions.some(r=>regionText.indexOf(r) > -1);
+      if(kw) ok = ok && (card.textContent.indexOf(kw) > -1);
+      card.style.display = ok ? '' : 'none';
+      if(ok) shown++;
+    });
+    updateCount(shown);
+    scrollToJobs();
+  }
+  function resetJobFilter(){
+    const cards = document.querySelectorAll('.job-list .job-card');
+    cards.forEach(c=>c.style.display='');
+    updateCount(cards.length);
+  }
+
   function wireUiControls(){
     /* 헤더 로그인 / 회원가입 버튼 */
     const loginBtn = document.querySelector('.btn-login');
@@ -1677,21 +1767,37 @@
     if(loginBtn) loginBtn.addEventListener('click', function(e){ e.preventDefault(); if(!isAdmin) openModal('modalLogin'); });
     if(joinBtn)  joinBtn.addEventListener('click',  function(e){ e.preventDefault(); if(!isAdmin) openModal('modalJoin'); });
 
-    /* 필터 버튼: 활성 상태 토글 */
+    /* 필터 버튼: 활성 토글 (+ 전체 = 리셋) */
     document.querySelectorAll('.filter-bar .filter-btn').forEach(btn=>{
       btn.addEventListener('click', function(){
         document.querySelectorAll('.filter-bar .filter-btn').forEach(b=>b.classList.remove('on'));
         this.classList.add('on');
+        if(this.textContent.trim()==='전체') resetJobFilter();
+        scrollToJobs();
       });
     });
 
-    /* 검색 버튼 */
+    /* 히어로 검색: 지역 + 차종 + 키워드 */
+    const selects   = document.querySelectorAll('.hero .search-select');
+    const regionSel = selects[0], typeSel = selects[1];
+    const kwInput   = document.querySelector('.hero .search-input');
     const searchBtn = document.querySelector('.btn-search');
-    if(searchBtn) searchBtn.addEventListener('click', function(e){ e.preventDefault(); scrollToJobs(); });
+    if(searchBtn) searchBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      const region = (regionSel && regionSel.selectedIndex > 0) ? regionSel.value : '';
+      const type   = (typeSel   && typeSel.selectedIndex   > 0) ? typeSel.value   : '';
+      const kw     = kwInput ? kwInput.value.trim() : '';
+      if(!region && !type && !kw){ resetJobFilter(); scrollToJobs(); return; }
+      filterJobs(type, region, kw);
+    });
 
-    /* 차종 카테고리 카드 → 공고 목록으로 이동 */
+    /* 차종 카테고리 카드 → 해당 차종으로 필터 */
     document.querySelectorAll('.cat-card').forEach(c=>{
-      c.addEventListener('click', function(e){ e.preventDefault(); scrollToJobs(); });
+      c.addEventListener('click', function(e){
+        e.preventDefault();
+        const name = (c.querySelector('.cat-name')||{}).textContent || '';
+        filterJobs(name, '', '');
+      });
     });
   }
 
