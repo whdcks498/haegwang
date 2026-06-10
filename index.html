@@ -1155,6 +1155,10 @@
       <select id="aj_region"><option>전국</option><option>서울/경기</option><option>인천</option><option>부산</option><option>대구</option><option>광주</option><option>대전</option></select>
     </div>
     <div class="form-group"><label>급여</label><input type="text" id="aj_salary" placeholder="예: 월 400만↑" value="월 400만↑"></div>
+    <div class="form-group">
+      <label>📋 상세 구인공고 내용 *</label>
+      <textarea id="aj_desc" rows="7" placeholder="예시)&#10;· 모집부문: 5톤 화물기사&#10;· 운행지역: 전국 (희망지역 협의)&#10;· 자격조건: 25~70세, 화물운송종사자격증 소지자 우대, 초보·고령 환영&#10;· 근무조건: 월급제/일당제 협의, 4대보험, 숙식 지원&#10;· 우대사항: 경력자, 장거리 가능자&#10;· 문의: 010-7233-3916" style="width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:inherit;line-height:1.6;resize:vertical;box-sizing:border-box"></textarea>
+    </div>
 
     <!-- 이미지 업로드 -->
     <div class="form-group">
@@ -1228,6 +1232,12 @@
         <div style="font-size:15px;font-weight:700;color:#666">상세 이미지가 없습니다</div>
         <div style="font-size:13px;color:#999;margin-top:6px">문의: 010-7233-3916</div>
       </div>
+    </div>
+
+    <!-- 상세 구인공고 내용 -->
+    <div id="jd_descWrap" style="padding:20px 24px;border-top:1px solid #eee;display:none">
+      <div style="font-weight:900;color:#1a3a8a;margin-bottom:10px;font-size:16px">📋 상세 구인공고</div>
+      <div id="jd_desc" style="white-space:pre-wrap;line-height:1.8;color:#333;font-size:14px"></div>
     </div>
 
     <!-- 하단 액션 -->
@@ -1446,4 +1456,260 @@
     document.getElementById('imgDropZone').style.background = '#f0f3ff';
   }
 
-  /* ══════════
+  /* ════════════════════════════════════════
+     성공 모달
+  ════════════════════════════════════════ */
+  function showSuccess(icon, title, msg){
+    document.getElementById('successIcon').textContent  = icon  || '✅';
+    document.getElementById('successTitle').textContent = title || '완료!';
+    document.getElementById('successMsg').innerText     = msg   || '성공적으로 처리되었습니다.';
+    openModal('modalSuccess');
+  }
+
+  /* ════════════════════════════════════════
+     회원가입 처리
+  ════════════════════════════════════════ */
+  function doJoin(){
+    const name  = document.getElementById('joinName').value.trim();
+    const phone = document.getElementById('joinPhone').value.trim();
+    const email = document.getElementById('joinEmail').value.trim();
+    const pw    = document.getElementById('joinPw').value;
+    const agree = document.getElementById('agreeAll').checked;
+    if(!name || !phone || !email || !pw){ alert('모든 항목을 입력해 주세요.'); return; }
+    if(!agree){ alert('이용약관 및 개인정보처리방침에 동의해 주세요.'); return; }
+    closeModal('modalJoin');
+    showSuccess('🎉','회원가입 완료!', name + '님, 가입을 환영합니다!\n이제 전국 채용공고를 자유롭게 이용하세요.');
+    ['joinName','joinPhone','joinEmail','joinPw'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('agreeAll').checked = false;
+  }
+
+  /* ════════════════════════════════════════
+     관리자 액션 (상단 관리자 바)
+  ════════════════════════════════════════ */
+  function adminAction(type){
+    if(type === 'addJob')       openModal('modalAdminJob');
+    else if(type === 'editSite') openModal('modalAdminEdit');
+    else if(type === 'viewApp')  window.open(FORMS_URL, '_blank');
+    else if(type === 'logout')   doLogout();
+  }
+
+  /* ════════════════════════════════════════
+     채용공고 상세 모달
+  ════════════════════════════════════════ */
+  function openJobDetailData(data){
+    document.getElementById('jd_company').textContent = data.company || '';
+    document.getElementById('jd_title').textContent   = data.title   || '';
+    document.getElementById('jd_salary').textContent  = data.salary  || '';
+    /* 배지 */
+    const badges = document.getElementById('jd_badges');
+    badges.innerHTML = '';
+    (data.badges || []).forEach(b=>{
+      const span = document.createElement('span');
+      span.style.cssText = 'background:rgba(255,255,255,.2);color:#fff;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700';
+      span.textContent = b;
+      badges.appendChild(span);
+    });
+    /* 정보 */
+    document.getElementById('jd_info').innerHTML = (data.info || []).map(i=>'<span>'+i+'</span>').join('');
+    /* 이미지 */
+    const img = document.getElementById('jd_image');
+    const noImg = document.getElementById('jd_noImage');
+    if(data.image){
+      img.src = data.image; img.style.display = 'block'; noImg.style.display = 'none';
+    } else {
+      img.style.display = 'none'; noImg.style.display = 'block';
+    }
+    /* 상세 구인공고 내용 */
+    const descWrap = document.getElementById('jd_descWrap');
+    const descEl   = document.getElementById('jd_desc');
+    if(data.desc && data.desc.trim()){
+      descEl.textContent = data.desc;
+      descWrap.style.display = 'block';
+    } else {
+      descEl.textContent = '';
+      descWrap.style.display = 'none';
+    }
+    openModal('modalJobDetail');
+  }
+
+  /* 기존(정적) 공고 카드 클릭 시 상세 모달 열기 */
+  function wireJobCards(){
+    document.querySelectorAll('.job-card').forEach(card=>{
+      if(card.dataset.wired) return;
+      card.dataset.wired = '1';
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function(){
+        const badges = [...card.querySelectorAll('.badge')].map(b=>b.textContent.trim());
+        const info   = [...card.querySelectorAll('.job-info-item')].map(b=>b.textContent.trim());
+        let desc = card.dataset.desc || '';
+        if(!desc){
+          /* 상세 설명이 없는 기존 공고는 카드 정보로 자동 구성 */
+          desc = info.join('\n') + '\n\n지원을 원하시면 아래 [이력서 등록하기] 또는 전화로 문의해 주세요.';
+        }
+        openJobDetailData({
+          company: (card.querySelector('.job-company')||{}).textContent || '',
+          title:   (card.querySelector('.job-title')||{}).textContent || '',
+          salary:  (card.querySelector('.job-salary .amount')||{}).textContent || '',
+          badges, info, desc,
+          image: card.dataset.image || null
+        });
+      });
+    });
+  }
+
+  /* ════════════════════════════════════════
+     관리자: 공고 등록 (localStorage 영구 저장)
+  ════════════════════════════════════════ */
+  const JOBS_KEY = 'haegwang_admin_jobs';
+
+  function loadAdminJobs(){
+    try { return JSON.parse(localStorage.getItem(JOBS_KEY) || '[]'); }
+    catch(e){ return []; }
+  }
+
+  function renderAdminJob(job, prepend){
+    const list = document.querySelector('.job-list');
+    if(!list) return;
+    const card = document.createElement('div');
+    card.className = 'job-card';
+    if(job.image) card.dataset.image = job.image;
+    if(job.desc)  card.dataset.desc = job.desc;
+    card.innerHTML =
+      '<div class="badge-row">' +
+        '<span class="badge badge-new">NEW</span>' +
+        '<span class="badge badge-type">' + (job.type||'전 차종') + '</span>' +
+        '<span class="badge badge-region">📍 ' + (job.region||'전국') + '</span>' +
+      '</div>' +
+      '<div class="job-company">' + (job.company||'해광 화물운송') + '</div>' +
+      '<div class="job-title">' + (job.title||'') + '</div>' +
+      '<div class="job-info">' +
+        '<div class="job-info-item">🗓 <strong>상시모집</strong></div>' +
+        '<div class="job-info-item">📞 010-7233-3916</div>' +
+      '</div>' +
+      '<div class="job-salary">' +
+        '<div class="amount">' + (job.salary||'협의') + '</div>' +
+        '<div class="unit">협의가능</div>' +
+        '<div class="job-deadline">NEW</div>' +
+      '</div>';
+    if(prepend) list.prepend(card); else list.appendChild(card);
+    card.dataset.wired = '';
+    wireJobCards();
+  }
+
+  function saveAdminJob(){
+    const company = document.getElementById('aj_company').value.trim();
+    const title   = document.getElementById('aj_title').value.trim();
+    const type    = document.getElementById('aj_type').value;
+    const region  = document.getElementById('aj_region').value;
+    const salary  = document.getElementById('aj_salary').value.trim();
+    const desc    = document.getElementById('aj_desc').value.trim();
+    if(!company || !title){ alert('회사명과 공고 제목을 입력해 주세요.'); return; }
+    if(!desc){ alert('상세 구인공고 내용을 입력해 주세요.'); document.getElementById('aj_desc').focus(); return; }
+    const job = { company, title, type, region, salary, desc, image: currentJobImage, ts: Date.now() };
+    const jobs = loadAdminJobs();
+    jobs.unshift(job);
+    try { localStorage.setItem(JOBS_KEY, JSON.stringify(jobs)); } catch(e){}
+    renderAdminJob(job, true);
+    closeModal('modalAdminJob');
+    showSuccess('✅','공고 등록 완료!', '"' + title + '" 상세 공고가 등록되었습니다.\n공고 카드를 클릭하면 상세 내용을 볼 수 있습니다.');
+    document.getElementById('aj_title').value = '';
+    document.getElementById('aj_desc').value = '';
+    clearImg();
+  }
+
+  /* ════════════════════════════════════════
+     관리자: 홈페이지 수정 (연락처 / 공지 배너)
+  ════════════════════════════════════════ */
+  const NOTICE_KEY = 'haegwang_notice';
+
+  function showNoticeBanner(text){
+    if(!text) return;
+    let bar = document.getElementById('noticeBanner');
+    if(!bar){
+      bar = document.createElement('div');
+      bar.id = 'noticeBanner';
+      bar.style.cssText = 'background:#FFD700;color:#1a237e;text-align:center;padding:10px 16px;font-weight:800;font-size:14px;position:relative';
+      bar.innerHTML = '<span id="noticeText"></span>' +
+        '<span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer" onclick="hideNoticeBanner()">✕</span>';
+      const header = document.querySelector('header');
+      header.parentNode.insertBefore(bar, header);
+    }
+    document.getElementById('noticeText').textContent = '📢 ' + text;
+    bar.style.display = 'block';
+  }
+
+  function hideNoticeBanner(){
+    const bar = document.getElementById('noticeBanner');
+    if(bar) bar.style.display = 'none';
+    try { localStorage.removeItem(NOTICE_KEY); } catch(e){}
+  }
+
+  function saveSiteEdit(){
+    const phone  = document.getElementById('se_phone').value.trim();
+    const notice = document.getElementById('se_notice').value.trim();
+    let msg = '';
+    if(notice){
+      try { localStorage.setItem(NOTICE_KEY, notice); } catch(e){}
+      showNoticeBanner(notice);
+      msg += '공지 배너가 등록되었습니다.\n';
+    }
+    if(phone){
+      msg += '연락처 변경 요청: ' + phone + '\n(전화번호 영구 변경은 GitHub 파일 수정이 필요합니다)';
+    }
+    closeModal('modalAdminEdit');
+    showSuccess('💾','저장 완료!', msg || '변경 사항이 적용되었습니다.');
+    document.getElementById('se_notice').value = '';
+    document.getElementById('se_phone').value = '';
+  }
+
+  /* ════════════════════════════════════════
+     검색 / 필터 / 카테고리 (UI 반응 처리)
+  ════════════════════════════════════════ */
+  function scrollToJobs(){
+    const el = document.getElementById('jobs');
+    if(el) el.scrollIntoView({behavior:'smooth'});
+  }
+
+  function wireUiControls(){
+    /* 헤더 로그인 / 회원가입 버튼 */
+    const loginBtn = document.querySelector('.btn-login');
+    const joinBtn  = document.querySelector('.btn-join');
+    if(loginBtn) loginBtn.addEventListener('click', function(e){ e.preventDefault(); if(!isAdmin) openModal('modalLogin'); });
+    if(joinBtn)  joinBtn.addEventListener('click',  function(e){ e.preventDefault(); if(!isAdmin) openModal('modalJoin'); });
+
+    /* 필터 버튼: 활성 상태 토글 */
+    document.querySelectorAll('.filter-bar .filter-btn').forEach(btn=>{
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.filter-bar .filter-btn').forEach(b=>b.classList.remove('on'));
+        this.classList.add('on');
+      });
+    });
+
+    /* 검색 버튼 */
+    const searchBtn = document.querySelector('.btn-search');
+    if(searchBtn) searchBtn.addEventListener('click', function(e){ e.preventDefault(); scrollToJobs(); });
+
+    /* 차종 카테고리 카드 → 공고 목록으로 이동 */
+    document.querySelectorAll('.cat-card').forEach(c=>{
+      c.addEventListener('click', function(e){ e.preventDefault(); scrollToJobs(); });
+    });
+  }
+
+  /* ════════════════════════════════════════
+     초기화
+  ════════════════════════════════════════ */
+  document.addEventListener('DOMContentLoaded', function(){
+    /* 저장된 공지 배너 복원 */
+    try {
+      const savedNotice = localStorage.getItem(NOTICE_KEY);
+      if(savedNotice) showNoticeBanner(savedNotice);
+    } catch(e){}
+    /* 저장된 관리자 공고 복원 */
+    loadAdminJobs().slice().reverse().forEach(job=>renderAdminJob(job, true));
+    /* 카드 / UI 컨트롤 연결 */
+    wireJobCards();
+    wireUiControls();
+  });
+</script>
+</body>
+</html>
