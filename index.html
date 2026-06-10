@@ -1744,7 +1744,10 @@
       const regionText = (card.querySelector('.badge-region')||{}).textContent || '';
       let ok = true;
       const anyType = /전차종|전국/.test(typeText);
-      if(tk && !anyType) ok = ok && (typeText.indexOf(tk) > -1);
+      if(tk && !anyType){
+        if(tk === '특수') ok = ok && (typeText.indexOf('특수') > -1);
+        else { const cardTons = typeText.match(/[0-9]+(?:\.[0-9]+)?톤/g) || []; ok = ok && cardTons.includes(tk); }
+      }
       const anyRegion = regionText.indexOf('전국') > -1;
       if(regions.length && !anyRegion) ok = ok && regions.some(r=>regionText.indexOf(r) > -1);
       if(kw) ok = ok && (card.textContent.indexOf(kw) > -1);
