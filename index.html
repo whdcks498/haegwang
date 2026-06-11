@@ -1687,18 +1687,24 @@
     /* 회원 정보 저장 (관리자 회원관리용) */
     const vgEl = document.querySelector('#vehicleGroup select, #vehicleGroup input');
     const rgEl = document.querySelector('#regionGroup select, #regionGroup input');
+    const isCompany = (currentTab === 'company');
     const member = {
-      type: (currentTab === 'company') ? 'company' : 'driver',
+      type: isCompany ? 'company' : 'driver',
       name: name, phone: phone, email: email,
       extra1: vgEl ? vgEl.value.trim() : '',   // 기사=차종 / 기업=회사명
       extra2: rgEl ? rgEl.value.trim() : '',   // 기사=지역 / 기업=사업자번호
+      status: isCompany ? 'pending' : 'active', // 기업회원은 관리자 승인 필요
       ts: Date.now()
     };
     const members = loadMembers();
     members.unshift(member);
     try { localStorage.setItem(MEMBERS_KEY, JSON.stringify(members)); } catch(e){}
     closeModal('modalJoin');
-    showSuccess('🎉','회원가입 완료!', name + '님, 가입을 환영합니다!\n이제 전국 채용공고를 자유롭게 이용하세요.');
+    if(isCompany){
+      showSuccess('🏢','기업회원 가입 신청 완료!', name + '님, 가입 신청이 접수되었습니다.\n관리자 확인·승인 후 구인공고 등록 등 활동이 가능합니다.');
+    } else {
+      showSuccess('🎉','회원가입 완료!', name + '님, 가입을 환영합니다!\n이제 전국 채용공고를 자유롭게 이용하세요.');
+    }
     ['joinName','joinPhone','joinEmail','joinPw'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('agreeAll').checked = false;
   }
@@ -1729,12 +1735,17 @@
     const wrap = document.getElementById('memberList');
     if(list.length===0){ wrap.innerHTML='<div style="text-align:center;color:#999;padding:40px 0">등록된 회원이 없습니다.</div>'; return; }
     const isCompany = memberTab==='company';
+    if(isCompany){
+      const pend = list.filter(m=>(m.status||'pending')==='pending').length;
+      document.getElementById('memberCount').textContent = '총 ' + list.length + '개 사 (승인대기 ' + pend + ')';
+    }
     let html = '<table style="width:100%;border-collapse:collapse;font-size:13px">'+
       '<tr style="background:#1a3a8a;color:#fff">'+
         '<th style="padding:8px;text-align:left">'+(isCompany?'회사명':'이름')+'</th>'+
         '<th style="padding:8px;text-align:left">연락처</th>'+
         '<th style="padding:8px;text-align:left">이메일</th>'+
         '<th style="padding:8px;text-align:left">'+(isCompany?'사업자번호':'차종/지역')+'</th>'+
+        (isCompany?'<th style="padding:8px;text-align:center">상태</th>':'')+
         '<th style="padding:8px;text-align:center">가입일</th>'+
         '<th style="padding:8px;text-align:center">관리</th>'+
       '</tr>';
@@ -1742,24 +1753,46 @@
       const d = new Date(m.ts); const ds = d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate();
       const colA = isCompany ? (m.extra1||'-') : (m.name||'-');
       const colD = isCompany ? (m.extra2||'-') : ((m.extra1||'-')+' / '+(m.extra2||'-'));
+      let statusCell='', mgmt='';
+      if(isCompany){
+        const st = m.status || 'pending';
+        if(st==='approved'){
+          statusCell = '<td style="padding:8px;text-align:center"><span style="background:#e6f7ed;color:#03794a;padding:3px 8px;border-radius:10px;font-weight:700">승인됨</span></td>';
+          mgmt = '<button onclick="deleteMember('+m.ts+')" style="background:#FF3B30;color:#fff;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px">삭제</button>';
+        } else {
+          statusCell = '<td style="padding:8px;text-align:center"><span style="background:#fff3cd;color:#9a6b00;padding:3px 8px;border-radius:10px;font-weight:700">승인대기</span></td>';
+          mgmt = '<button onclick="approveMember('+m.ts+')" style="background:#03794a;color:#fff;border:none;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:12px;margin-right:4px">승인</button>'+
+                 '<button onclick="deleteMember('+m.ts+')" style="background:#888;color:#fff;border:none;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:12px">거절</button>';
+        }
+      } else {
+        mgmt = '<button onclick="deleteMember('+m.ts+')" style="background:#FF3B30;color:#fff;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px">삭제</button>';
+      }
       html += '<tr style="border-bottom:1px solid #eee">'+
         '<td style="padding:8px;font-weight:700">'+colA+'</td>'+
         '<td style="padding:8px">'+(m.phone||'-')+'</td>'+
         '<td style="padding:8px">'+(m.email||'-')+'</td>'+
         '<td style="padding:8px">'+colD+'</td>'+
+        statusCell+
         '<td style="padding:8px;text-align:center;color:#888">'+ds+'</td>'+
-        '<td style="padding:8px;text-align:center"><button onclick="deleteMember('+m.ts+')" style="background:#FF3B30;color:#fff;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px">삭제</button></td>'+
+        '<td style="padding:8px;text-align:center;white-space:nowrap">'+mgmt+'</td>'+
       '</tr>';
     });
     html += '</table>';
     wrap.innerHTML = html;
   }
 
+  function approveMember(ts){
+    const members = loadMembers().map(m=>String(m.ts)===String(ts)?Object.assign({},m,{status:'approved'}):m);
+    saveMembers(members);
+    renderMembers();
+    showSuccess('✅','승인 완료','기업회원이 승인되었습니다. 이제 구인공고 등록 등 활동이 가능합니다.');
+  }
+
   function deleteMember(ts){
-    if(!confirm('이 회원을 삭제할까요?')) return;
+    if(!confirm('이 회원을 삭제/거절할까요?')) return;
     saveMembers(loadMembers().filter(m=>String(m.ts)!==String(ts)));
     renderMembers();
-    showSuccess('🗑️','삭제 완료','회원이 삭제되었습니다.');
+    showSuccess('🗑️','처리 완료','회원이 삭제(거절)되었습니다.');
   }
 
   /* ════════════════════════════════════════
