@@ -511,6 +511,7 @@
     <button onclick="adminAction('addJob')"   style="padding:6px 14px;background:#FFD700;color:#1a237e;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px">➕ 공고 등록</button>
     <button onclick="adminAction('editSite')" style="padding:6px 14px;background:#2563c8;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px">✏️ 홈페이지 수정</button>
     <button onclick="adminAction('viewApp')"  style="padding:6px 14px;background:#03C75A;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px">📋 이력서 접수 확인</button>
+    <button onclick="adminAction('members')"  style="padding:6px 14px;background:#7c5cff;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px">👥 회원 관리</button>
     <button onclick="adminAction('logout')"   style="padding:6px 14px;background:#FF3B30;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px">🚪 로그아웃</button>
   </div>
 </div>
@@ -1436,6 +1437,27 @@
   </div>
 </div>
 
+<!-- ══ 회원 관리 모달 ══ -->
+<div class="modal-overlay" id="modalMembers">
+  <div class="modal-box" style="width:760px;max-width:94vw;max-height:90vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeModal('modalMembers')">✕</button>
+    <div class="modal-title">👥 회원 관리</div>
+    <div class="modal-sub" style="color:#FF3B30;font-weight:700">🔐 관리자 전용</div>
+    <div class="modal-tabs" style="margin-bottom:14px">
+      <div class="modal-tab active" id="mtabDriver" onclick="switchMemberTab('driver')">🚛 기사회원</div>
+      <div class="modal-tab" id="mtabCompany" onclick="switchMemberTab('company')">🏢 기업회원</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <input id="memberSearch" type="text" placeholder="이름·연락처·이메일 검색" oninput="renderMembers()" style="flex:1;padding:10px 12px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px">
+      <span id="memberCount" style="font-size:13px;color:#888;white-space:nowrap">총 0명</span>
+    </div>
+    <div id="memberList"></div>
+    <div style="margin-top:14px;font-size:12px;color:#999;line-height:1.6">
+      ※ 회원 정보는 이 브라우저(관리자 PC)에 저장됩니다. 모든 기기의 가입 내역을 모으려면 구글폼/시트 연동이 필요합니다.
+    </div>
+  </div>
+</div>
+
 <!-- ══ 성공 모달 ══ -->
 <div class="modal-overlay" id="modalSuccess">
   <div class="modal-box" style="width:380px">
@@ -1662,10 +1684,82 @@
     const agree = document.getElementById('agreeAll').checked;
     if(!name || !phone || !email || !pw){ alert('모든 항목을 입력해 주세요.'); return; }
     if(!agree){ alert('이용약관 및 개인정보처리방침에 동의해 주세요.'); return; }
+    /* 회원 정보 저장 (관리자 회원관리용) */
+    const vgEl = document.querySelector('#vehicleGroup select, #vehicleGroup input');
+    const rgEl = document.querySelector('#regionGroup select, #regionGroup input');
+    const member = {
+      type: (currentTab === 'company') ? 'company' : 'driver',
+      name: name, phone: phone, email: email,
+      extra1: vgEl ? vgEl.value.trim() : '',   // 기사=차종 / 기업=회사명
+      extra2: rgEl ? rgEl.value.trim() : '',   // 기사=지역 / 기업=사업자번호
+      ts: Date.now()
+    };
+    const members = loadMembers();
+    members.unshift(member);
+    try { localStorage.setItem(MEMBERS_KEY, JSON.stringify(members)); } catch(e){}
     closeModal('modalJoin');
     showSuccess('🎉','회원가입 완료!', name + '님, 가입을 환영합니다!\n이제 전국 채용공고를 자유롭게 이용하세요.');
     ['joinName','joinPhone','joinEmail','joinPw'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('agreeAll').checked = false;
+  }
+
+  /* ════════════════════════════════════════
+     회원 관리 (기사회원 / 기업회원)
+  ════════════════════════════════════════ */
+  const MEMBERS_KEY = 'haegwang_members';
+  let memberTab = 'driver';
+  function loadMembers(){ try{ return JSON.parse(localStorage.getItem(MEMBERS_KEY)||'[]'); }catch(e){ return []; } }
+  function saveMembers(a){ try{ localStorage.setItem(MEMBERS_KEY, JSON.stringify(a)); }catch(e){} }
+
+  function openMembersModal(){ memberTab='driver'; document.getElementById('memberSearch').value=''; switchMemberTab('driver'); openModal('modalMembers'); }
+
+  function switchMemberTab(type){
+    memberTab = type;
+    document.getElementById('mtabDriver').classList.toggle('active', type==='driver');
+    document.getElementById('mtabCompany').classList.toggle('active', type==='company');
+    renderMembers();
+  }
+
+  function renderMembers(){
+    const all = loadMembers();
+    const kw = (document.getElementById('memberSearch').value||'').trim();
+    const list = all.filter(m=>m.type===memberTab)
+                    .filter(m=>!kw || (m.name+m.phone+m.email+m.extra1+m.extra2).indexOf(kw)>-1);
+    document.getElementById('memberCount').textContent = '총 ' + list.length + '명';
+    const wrap = document.getElementById('memberList');
+    if(list.length===0){ wrap.innerHTML='<div style="text-align:center;color:#999;padding:40px 0">등록된 회원이 없습니다.</div>'; return; }
+    const isCompany = memberTab==='company';
+    let html = '<table style="width:100%;border-collapse:collapse;font-size:13px">'+
+      '<tr style="background:#1a3a8a;color:#fff">'+
+        '<th style="padding:8px;text-align:left">'+(isCompany?'회사명':'이름')+'</th>'+
+        '<th style="padding:8px;text-align:left">연락처</th>'+
+        '<th style="padding:8px;text-align:left">이메일</th>'+
+        '<th style="padding:8px;text-align:left">'+(isCompany?'사업자번호':'차종/지역')+'</th>'+
+        '<th style="padding:8px;text-align:center">가입일</th>'+
+        '<th style="padding:8px;text-align:center">관리</th>'+
+      '</tr>';
+    list.forEach(m=>{
+      const d = new Date(m.ts); const ds = d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate();
+      const colA = isCompany ? (m.extra1||'-') : (m.name||'-');
+      const colD = isCompany ? (m.extra2||'-') : ((m.extra1||'-')+' / '+(m.extra2||'-'));
+      html += '<tr style="border-bottom:1px solid #eee">'+
+        '<td style="padding:8px;font-weight:700">'+colA+'</td>'+
+        '<td style="padding:8px">'+(m.phone||'-')+'</td>'+
+        '<td style="padding:8px">'+(m.email||'-')+'</td>'+
+        '<td style="padding:8px">'+colD+'</td>'+
+        '<td style="padding:8px;text-align:center;color:#888">'+ds+'</td>'+
+        '<td style="padding:8px;text-align:center"><button onclick="deleteMember('+m.ts+')" style="background:#FF3B30;color:#fff;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px">삭제</button></td>'+
+      '</tr>';
+    });
+    html += '</table>';
+    wrap.innerHTML = html;
+  }
+
+  function deleteMember(ts){
+    if(!confirm('이 회원을 삭제할까요?')) return;
+    saveMembers(loadMembers().filter(m=>String(m.ts)!==String(ts)));
+    renderMembers();
+    showSuccess('🗑️','삭제 완료','회원이 삭제되었습니다.');
   }
 
   /* ════════════════════════════════════════
@@ -1675,6 +1769,7 @@
     if(type === 'addJob')       openAddJob();
     else if(type === 'editSite') openModal('modalAdminEdit');
     else if(type === 'viewApp')  window.open(FORMS_URL, '_blank');
+    else if(type === 'members')  openMembersModal();
     else if(type === 'logout')   doLogout();
   }
 
