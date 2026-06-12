@@ -1793,6 +1793,7 @@
     const members = loadMembers();
     members.unshift(member);
     try { localStorage.setItem(MEMBERS_KEY, JSON.stringify(members)); } catch(e){}
+    try { submitMemberToGoogleForm(member); } catch(e){}
     closeModal('modalJoin');
     if(isCompany){
       showSuccess('🏢','기업회원 가입 신청 완료!', name + '님, 가입 신청이 접수되었습니다.\n관리자 확인·승인 후 구인공고 등록 등 활동이 가능합니다.');
@@ -1810,6 +1811,19 @@
   let memberTab = 'driver';
   function loadMembers(){ try{ return JSON.parse(localStorage.getItem(MEMBERS_KEY)||'[]'); }catch(e){ return []; } }
   function saveMembers(a){ try{ localStorage.setItem(MEMBERS_KEY, JSON.stringify(a)); }catch(e){} }
+
+  /* 구글폼 연동: 회원가입 정보를 구글폼(→구글시트)으로 자동 전송 */
+  const GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfBS8Q9xc8vHTtJNKiFjUFL_on7JtrLFwRaufRUqEwM-dz1hw/formResponse';
+  function submitMemberToGoogleForm(m){
+    const isCo = (m.type === 'company');
+    const data = new URLSearchParams();
+    data.append('entry.1105015587', isCo ? '직원을 채용하고 싶어요 (구인)' : '일자리를 찾고 있어요 (구직)'); // 회원유형
+    data.append('entry.1140761582', isCo ? (m.extra1 || m.name || '') : (m.name || ''));               // 성함/회사명
+    data.append('entry.1779080342', m.extra2 || '');                                                    // 거주지/사업자번호
+    data.append('entry.1975555563', isCo ? '' : (m.extra1 || ''));                                      // 희망공고/보유차량(차종)
+    data.append('entry.901816019', m.email || '');                                                      // 이메일
+    fetch(GFORM_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:data.toString() });
+  }
 
   function openMembersModal(){ memberTab='driver'; document.getElementById('memberSearch').value=''; switchMemberTab('driver'); openModal('modalMembers'); }
 
