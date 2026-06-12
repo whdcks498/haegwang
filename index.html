@@ -1582,7 +1582,7 @@
     </div>
     <div id="memberList"></div>
     <div style="margin-top:14px;font-size:12px;color:#999;line-height:1.6">
-      ※ 회원 정보는 이 브라우저(관리자 PC)에 저장됩니다. 모든 기기의 가입 내역을 모으려면 구글폼/시트 연동이 필요합니다.
+      ※ 회원 목록은 구글시트(서버)에서 실시간으로 불러옵니다. '탈퇴' 처리해도 시트에서 삭제되지 않고 빨간색 '탈퇴(날짜)'로 표시되며, 해당 아이디는 로그인할 수 없게 됩니다.
     </div>
   </div>
 </div>
@@ -1624,7 +1624,7 @@
      관리자 설정
   ════════════════════════════════════════ */
   const ADMIN_ID  = 'pjc3916';
-  const ADMIN_PW  = '@pjc@3916';
+  let   adminKey  = null;   // 관리자 로그인 시 비밀번호 해시 보관 (회원관리 인증용, 서버 검증)
   const FORMS_URL = 'https://forms.gle/GNssyaq362VDPsbT8';
 
   let isAdmin = false;
@@ -1680,13 +1680,16 @@
   }
 
   /* ── 관리자 로그인 ── */
-  function doAdminLogin(){
+  async function doAdminLogin(){
     const id = document.getElementById('adminId').value.trim();
     const pw = document.getElementById('adminPw').value;
     const errEl = document.getElementById('adminLoginError');
     if(!id || !pw){ errEl.style.display='block'; return; }
-    if(id === ADMIN_ID && pw === ADMIN_PW){
-      isAdmin = true;
+    let ares;
+    try{ const ah = await sha256Hex(pw); ares = await backendJsonp({ action:'adminlogin', id:id, h:ah }); if(ares && ares.ok) ares._h = ah; }
+    catch(e){ errEl.style.display='block'; return; }
+    if(ares && ares.ok && id === ADMIN_ID){
+      isAdmin = true; adminKey = ares._h;
       document.getElementById('adminId').value = '';
       document.getElementById('adminPw').value = '';
       errEl.style.display = 'none';
@@ -1732,12 +1735,20 @@
     const pw = document.getElementById('loginPw').value;
     if(!id || !pw){ alert('아이디와 비밀번호를 입력해 주세요.'); return; }
 
-    /* ── 관리자 로그인 ── */
-    if(id === ADMIN_ID && pw === ADMIN_PW){
-      isAdmin = true;
-      closeModal('modalLogin');
-      showAdminBar();
-      showSuccess('🔐','관리자 로그인 성공!','박종찬 관리자님, 환영합니다!\n관리자 메뉴가 활성화되었습니다.');
+    /* ── 관리자 로그인 (서버 검증) ── */
+    if(id === ADMIN_ID){
+      const ah = await sha256Hex(pw);
+      let ares;
+      try{ ares = await backendJsonp({ action:'adminlogin', id:id, h:ah }); }
+      catch(e){ alert('서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.'); return; }
+      if(ares && ares.ok){
+        isAdmin = true; adminKey = ah;
+        closeModal('modalLogin');
+        showAdminBar();
+        showSuccess('🔐','관리자 로그인 성공!','박종찬 관리자님, 환영합니다!\n관리자 메뉴가 활성화되었습니다.');
+      } else {
+        alert('관리자 비밀번호가 올바르지 않습니다.');
+      }
       return;
     }
 
@@ -2005,7 +2016,16 @@
     }catch(e){}
   }
 
-  function openMembersModal(){ memberTab='driver'; document.getElementById('memberSearch').value=''; switchMemberTab('driver'); openModal('modalMembers'); }
+  let membersCache = { drivers: [], companies: [] };
+
+  function openMembersModal(){
+    memberTab='driver';
+    document.getElementById('memberSearch').value='';
+    document.getElementById('mtabDriver').classList.add('active');
+    document.getElementById('mtabCompany').classList.remove('active');
+    openModal('modalMembers');
+    loadMembersFromServer();
+  }
 
   function switchMemberTab(type){
     memberTab = type;
@@ -2014,54 +2034,71 @@
     renderMembers();
   }
 
+  async function loadMembersFromServer(){
+    const wrap = document.getElementById('memberList');
+    wrap.innerHTML = '<div style="text-align:center;color:#999;padding:40px 0">회원 목록을 불러오는 중...</div>';
+    try{
+      const res = await backendJsonp({ action:'members', key: adminKey });
+      if(!res || !res.ok){ wrap.innerHTML='<div style="text-align:center;color:#c0392b;padding:40px 0">권한이 없습니다. 관리자로 다시 로그인해 주세요.</div>'; return; }
+      membersCache = { drivers: res.drivers||[], companies: res.companies||[] };
+      renderMembers();
+    }catch(e){
+      wrap.innerHTML='<div style="text-align:center;color:#c0392b;padding:40px 0">서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.</div>';
+    }
+  }
+
+  function fmtTs_(ts){
+    if(!ts) return '-';
+    const d = new Date(ts);
+    if(isNaN(d.getTime())) return String(ts).slice(0,10);
+    return d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate();
+  }
+
   function renderMembers(){
-    const all = loadMembers();
+    const isCompany = memberTab==='company';
+    const all = isCompany ? membersCache.companies : membersCache.drivers;
     const kw = (document.getElementById('memberSearch').value||'').trim();
-    const list = all.filter(m=>m.type===memberTab)
-                    .filter(m=>!kw || (m.name+m.phone+m.email+m.extra1+m.extra2).indexOf(kw)>-1);
-    document.getElementById('memberCount').textContent = '총 ' + list.length + '명';
+    const list = all.filter(m=>!kw || ((m.name||'')+(m.phone||'')+(m.email||'')+(m.c6||'')+(m.c7||'')).indexOf(kw)>-1);
+    const wd = list.filter(m=>String(m.status||'').indexOf('탈퇴')===0).length;
+    document.getElementById('memberCount').textContent = '총 ' + list.length + (isCompany?'개 사':'명') + (wd?(' · 탈퇴 '+wd):'');
     const wrap = document.getElementById('memberList');
     if(list.length===0){ wrap.innerHTML='<div style="text-align:center;color:#999;padding:40px 0">등록된 회원이 없습니다.</div>'; return; }
-    const isCompany = memberTab==='company';
-    if(isCompany){
-      const pend = list.filter(m=>(m.status||'pending')==='pending').length;
-      document.getElementById('memberCount').textContent = '총 ' + list.length + '개 사 (승인대기 ' + pend + ')';
-    }
     let html = '<table style="width:100%;border-collapse:collapse;font-size:13px">'+
       '<tr style="background:#1a3a8a;color:#fff">'+
-        '<th style="padding:8px;text-align:left">'+(isCompany?'회사명':'이름')+'</th>'+
+        '<th style="padding:8px;text-align:left">아이디</th>'+
+        '<th style="padding:8px;text-align:left">'+(isCompany?'담당자/회사명':'이름')+'</th>'+
         '<th style="padding:8px;text-align:left">연락처</th>'+
         '<th style="padding:8px;text-align:left">이메일</th>'+
         '<th style="padding:8px;text-align:left">'+(isCompany?'사업자번호':'차종/지역')+'</th>'+
-        (isCompany?'<th style="padding:8px;text-align:center">상태</th>':'')+
+        '<th style="padding:8px;text-align:center">상태</th>'+
         '<th style="padding:8px;text-align:center">가입일</th>'+
         '<th style="padding:8px;text-align:center">관리</th>'+
       '</tr>';
     list.forEach(m=>{
-      const d = new Date(m.ts); const ds = d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate();
-      const colA = isCompany ? (m.extra1||'-') : (m.name||'-');
-      const colD = isCompany ? (m.extra2||'-') : ((m.extra1||'-')+' / '+(m.extra2||'-'));
-      let statusCell='', mgmt='';
-      if(isCompany){
-        const st = m.status || 'pending';
-        if(st==='approved'){
-          statusCell = '<td style="padding:8px;text-align:center"><span style="background:#e6f7ed;color:#03794a;padding:3px 8px;border-radius:10px;font-weight:700">승인됨</span></td>';
-          mgmt = '<button onclick="deleteMember('+m.ts+')" style="background:#FF3B30;color:#fff;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px">삭제</button>';
-        } else {
-          statusCell = '<td style="padding:8px;text-align:center"><span style="background:#fff3cd;color:#9a6b00;padding:3px 8px;border-radius:10px;font-weight:700">승인대기</span></td>';
-          mgmt = '<button onclick="approveMember('+m.ts+')" style="background:#03794a;color:#fff;border:none;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:12px;margin-right:4px">승인</button>'+
-                 '<button onclick="deleteMember('+m.ts+')" style="background:#888;color:#fff;border:none;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:12px">거절</button>';
-        }
+      const withdrawn = String(m.status||'').indexOf('탈퇴')===0;
+      const colB = isCompany ? ((m.name||'-')+(m.c6?(' / '+m.c6):'')) : (m.name||'-');
+      const colE = isCompany ? (m.c7||'-') : ((m.c6||'-')+' / '+(m.c7||'-'));
+      let statusCell, mgmt;
+      if(withdrawn){
+        statusCell = '<span style="color:#c0392b;font-weight:700">'+m.status+'</span>';
+        mgmt = '<span style="color:#bbb">처리됨</span>';
+      } else if(isCompany && String(m.status)!=='승인완료'){
+        statusCell = '<span style="background:#fff3cd;color:#9a6b00;padding:3px 8px;border-radius:10px;font-weight:700">'+(m.status||'승인대기')+'</span>';
+        mgmt = '<button onclick="approveMember(\''+m.userid+'\')" style="background:#03794a;color:#fff;border:none;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:12px;margin-right:4px">승인</button>'+
+               '<button onclick="withdrawMember(\''+m.userid+'\',\'company\')" style="background:#FF3B30;color:#fff;border:none;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:12px">탈퇴</button>';
       } else {
-        mgmt = '<button onclick="deleteMember('+m.ts+')" style="background:#FF3B30;color:#fff;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px">삭제</button>';
+        statusCell = isCompany ? '<span style="background:#e6f7ed;color:#03794a;padding:3px 8px;border-radius:10px;font-weight:700">승인완료</span>' : '<span style="color:#03794a;font-weight:700">'+(m.status||'활동중')+'</span>';
+        mgmt = '<button onclick="withdrawMember(\''+m.userid+'\',\''+(isCompany?'company':'driver')+'\')" style="background:#FF3B30;color:#fff;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px">탈퇴</button>';
       }
-      html += '<tr style="border-bottom:1px solid #eee">'+
-        '<td style="padding:8px;font-weight:700">'+colA+'</td>'+
+      const rowStyle = withdrawn ? 'background:#fde8e8;color:#c0392b' : '';
+      html += '<tr style="border-bottom:1px solid #eee;'+rowStyle+'">'+
+        '<td style="padding:8px">'+(m.userid||'-')+'</td>'+
+        '<td style="padding:8px;font-weight:700">'+colB+'</td>'+
         '<td style="padding:8px">'+(m.phone||'-')+'</td>'+
         '<td style="padding:8px">'+(m.email||'-')+'</td>'+
-        '<td style="padding:8px">'+colD+'</td>'+
-        statusCell+
-        '<td style="padding:8px;text-align:center;color:#888">'+ds+'</td>'+
+        '<td style="padding:8px">'+colE+'</td>'+
+        '<td style="padding:8px;text-align:center">'+statusCell+'</td>'+
+        '<td style="padding:8px;text-align:center;color:#888">'+fmtTs_(m.ts)+'</td>'+
         '<td style="padding:8px;text-align:center;white-space:nowrap">'+mgmt+'</td>'+
       '</tr>';
     });
@@ -2069,18 +2106,22 @@
     wrap.innerHTML = html;
   }
 
-  function approveMember(ts){
-    const members = loadMembers().map(m=>String(m.ts)===String(ts)?Object.assign({},m,{status:'approved'}):m);
-    saveMembers(members);
-    renderMembers();
-    showSuccess('✅','승인 완료','기업회원이 승인되었습니다. 이제 구인공고 등록 등 활동이 가능합니다.');
+  async function approveMember(userid){
+    if(!confirm('이 기업회원을 승인할까요?\n승인 완료 메일이 자동 발송됩니다.')) return;
+    try{
+      const res = await backendJsonp({ action:'approve', key:adminKey, id:userid });
+      if(res && res.ok){ showSuccess('✅','승인 완료','기업회원이 승인되었습니다.\n승인 메일을 발송했습니다.'); loadMembersFromServer(); }
+      else alert('승인 처리에 실패했습니다. 다시 시도해 주세요.');
+    }catch(e){ alert('서버 연결에 실패했습니다. 다시 시도해 주세요.'); }
   }
 
-  function deleteMember(ts){
-    if(!confirm('이 회원을 삭제/거절할까요?')) return;
-    saveMembers(loadMembers().filter(m=>String(m.ts)!==String(ts)));
-    renderMembers();
-    showSuccess('🗑️','처리 완료','회원이 삭제(거절)되었습니다.');
+  async function withdrawMember(userid, type){
+    if(!confirm('이 회원을 탈퇴 처리할까요?\n\n· 시트에서 정보가 삭제되지 않습니다.\n· 빨간색으로 "탈퇴(날짜)"로 표시되고, 해당 아이디는 로그인할 수 없게 됩니다.')) return;
+    try{
+      const res = await backendJsonp({ action:'withdraw', key:adminKey, type:type, id:userid });
+      if(res && res.ok){ showSuccess('🗑️','탈퇴 처리 완료','회원이 탈퇴 처리되었습니다.\n(정보는 시트에 보존되고 빨간색으로 표시됩니다.)'); loadMembersFromServer(); }
+      else alert('탈퇴 처리에 실패했습니다. 다시 시도해 주세요.');
+    }catch(e){ alert('서버 연결에 실패했습니다. 다시 시도해 주세요.'); }
   }
 
   /* ════════════════════════════════════════
