@@ -1410,7 +1410,7 @@
       </div>
       <div class="form-group">
         <label>휴대폰 번호</label>
-        <input type="tel" id="joinPhone" placeholder="010-0000-0000">
+        <input type="tel" id="joinPhone" inputmode="numeric" maxlength="13" oninput="formatPhoneInput(this)" placeholder="010-0000-0000">
       </div>
       <div class="form-group">
         <label>이메일</label>
@@ -1647,6 +1647,20 @@
       document.body.appendChild(s);
       setTimeout(function(){ if(window[cb]){ try{delete window[cb];}catch(e){} s.remove(); reject(new Error('timeout')); } }, 12000);
     });
+  }
+
+  /* ── 휴대폰 번호 입력 자동 하이픈 + 검증 ── */
+  function formatPhoneInput(el){
+    var d = (el.value || '').replace(/[^0-9]/g, '').slice(0, 11);
+    if(d.length < 4){ el.value = d; }
+    else if(d.length < 8){ el.value = d.replace(/(\d{3})(\d+)/, '$1-$2'); }
+    else { el.value = d.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3'); }
+  }
+  function normalizePhone(raw){
+    var d = (raw || '').replace(/[^0-9]/g, '');
+    if(!/^01[0-9]{8,9}$/.test(d)) return null;          // 010 등 + 8~9자리 (총 10~11자리)
+    if(d.length === 11) return d.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    return d.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'); // 10자리
   }
 
   /* ── 모달 열기/닫기 ── */
@@ -1895,7 +1909,7 @@
   async function doJoin(){
     const userid = document.getElementById('joinUserId').value.trim();
     const name  = document.getElementById('joinName').value.trim();
-    const phone = document.getElementById('joinPhone').value.trim();
+    let   phone = document.getElementById('joinPhone').value.trim();
     const email = document.getElementById('joinEmail').value.trim();
     const pw    = document.getElementById('joinPw').value;
     const agree = document.getElementById('agreeAll').checked;
@@ -1903,6 +1917,9 @@
     if(!/^[A-Za-z0-9_]{4,20}$/.test(userid)){ alert('아이디는 영문/숫자 4~20자로 입력해 주세요.'); return; }
     if(pw.length < 6){ alert('비밀번호는 6자 이상으로 입력해 주세요.'); return; }
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ alert('올바른 이메일 주소를 입력해 주세요.'); return; }
+    const _pn = normalizePhone(phone);
+    if(!_pn){ alert('휴대폰 번호를 정확히 입력해 주세요.\n예: 010-1234-5678 (숫자 10~11자리)'); document.getElementById('joinPhone').focus(); return; }
+    phone = _pn;  // 하이픈 포함 형식으로 저장 (앞자리 0 보존)
     if(!agree){ alert('이용약관 및 개인정보처리방침에 동의해 주세요.'); return; }
 
     const btn = document.querySelector('#joinForm .btn-modal-submit');
