@@ -1,10 +1,21 @@
+# 화물구인구직 - 해광 화물운송 (전 검색엔진 크롤링 허용)
 User-agent: *
 Allow: /
 
+# 네이버
 User-agent: Yeti
 Allow: /
 
+# 구글
 User-agent: Googlebot
+Allow: /
+
+# 다음(카카오)
+User-agent: Daum
+Allow: /
+
+# 빙
+User-agent: Bingbot
 Allow: /
 
 Sitemap: https://whdcks498.github.io/haegwang/sitemap.xml
