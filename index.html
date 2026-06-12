@@ -1339,11 +1339,7 @@
     <div id="loginUserForm">
       <div class="modal-title" style="font-size:18px;margin-bottom:4px">회원 로그인</div>
       <div class="modal-sub">전국 화물기사 채용 1위 플랫폼</div>
-      <div class="social-btns">
-        <button class="btn-social btn-kakao" onclick="socialLogin('카카오')">🍊 카카오 로그인</button>
-        <button class="btn-social btn-naver" onclick="socialLogin('네이버')">🟢 네이버 로그인</button>
-      </div>
-      <div class="modal-divider">── 또는 아이디로 로그인 ──</div>
+      <div class="modal-divider">아이디로 로그인</div>
       <div class="form-group">
         <label>아이디</label>
         <input type="text" id="loginEmail" placeholder="아이디를 입력하세요">
@@ -1925,6 +1921,19 @@
     const vgEl = document.querySelector('#vehicleGroup select, #vehicleGroup input');
     const rgEl = document.querySelector('#regionGroup select, #regionGroup input');
     const isCompany = (currentTab === 'company');
+
+    /* 중복 가입 방지: 이메일 / 연락처 / (기업)사업자번호 */
+    try{
+      const dup = await backendJsonp({ action:'checkdup', email:email, phone:phone, biz: isCompany ? (rgEl ? rgEl.value.trim() : '') : '' });
+      if(dup){
+        let msg = '';
+        if(dup.email)      msg = '이미 가입된 이메일입니다.\n한 사람(또는 한 기업)당 한 번만 가입할 수 있습니다.';
+        else if(dup.phone) msg = '이미 가입된 연락처입니다.\n이미 회원으로 등록되어 있습니다.';
+        else if(dup.biz)   msg = '이미 가입된 사업자번호입니다.\n해당 기업은 이미 가입되어 있습니다.';
+        if(msg){ if(btn){ btn.disabled=false; btn.textContent='✅ 가입 완료'; } alert(msg); return; }
+      }
+    }catch(e){ /* 확인 실패 시에도 서버에서 2차 차단됨 */ }
+
     const pwhash = await sha256Hex(pw);
     const member = {
       type: isCompany ? 'company' : 'driver',
