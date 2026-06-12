@@ -1200,7 +1200,7 @@
       <div style="font-size:32px;margin-bottom:10px">🏢</div>
       <h3 style="font-size:15px;font-weight:900;color:#1a237e;margin-bottom:8px">기업회원 채용공고 등록</h3>
       <p style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">전국 18,000명의 기사님에게<br>내 공고를 무료로 노출하세요</p>
-      <a href="#" style="display:block;background:#1a3a8a;color:#fff;padding:11px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none">
+      <a href="#" onclick="postJobAttempt();return false;" style="display:block;background:#1a3a8a;color:#fff;padding:11px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none">
         무료 공고 등록하기
       </a>
     </div>
@@ -1223,7 +1223,7 @@
     <div class="footer-links">
       <a href="#">이용약관</a>
       <a href="#">개인정보처리방침</a>
-      <a href="#">채용공고 등록</a>
+      <a href="#" onclick="postJobAttempt();return false;">채용공고 등록</a>
       <a href="#">이력서 등록</a>
       <a href="#">고객센터</a>
       <a href="#">공지사항</a>
@@ -1405,7 +1405,11 @@
 
     <div id="joinForm">
       <div class="form-group">
-        <label>이름</label>
+        <label>아이디</label>
+        <input type="text" id="joinUserId" placeholder="영문/숫자 4~20자 (로그인 아이디)">
+      </div>
+      <div class="form-group">
+        <label id="lblName">이름</label>
         <input type="text" id="joinName" placeholder="실명을 입력하세요">
       </div>
       <div class="form-group">
@@ -1413,8 +1417,8 @@
         <input type="tel" id="joinPhone" placeholder="010-0000-0000">
       </div>
       <div class="form-group">
-        <label>이메일 (아이디)</label>
-        <input type="email" id="joinEmail" placeholder="이메일을 입력하세요">
+        <label>이메일</label>
+        <input type="email" id="joinEmail" placeholder="이메일을 입력하세요 (가입·승인 안내 발송)">
       </div>
       <div class="form-group">
         <label>비밀번호</label>
@@ -1628,6 +1632,26 @@
   const FORMS_URL = 'https://forms.gle/GNssyaq362VDPsbT8';
 
   let isAdmin = false;
+  let currentUser = null;  // 로그인된 일반/기업 회원 {id,type,status,name,email,company}
+
+  /* ── 보안: 비밀번호 해시 (SHA-256) ── */
+  async function sha256Hex(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  /* ── 백엔드(Apps Script) JSONP 호출 (로그인/중복확인 등 응답 읽기용) ── */
+  function backendJsonp(params){
+    return new Promise(function(resolve,reject){
+      var cb = '__hg'+Date.now()+Math.floor(Math.random()*10000);
+      var s = document.createElement('script');
+      var q = Object.keys(params).map(k=>encodeURIComponent(k)+'='+encodeURIComponent(params[k])).join('&');
+      window[cb] = function(data){ resolve(data); try{delete window[cb];}catch(e){} s.remove(); };
+      s.onerror = function(){ try{delete window[cb];}catch(e){} s.remove(); reject(new Error('net')); };
+      s.src = SHEET_WEBAPP_URL + '?' + q + '&callback=' + cb;
+      document.body.appendChild(s);
+      setTimeout(function(){ if(window[cb]){ try{delete window[cb];}catch(e){} s.remove(); reject(new Error('timeout')); } }, 12000);
+    });
+  }
 
   /* ── 모달 열기/닫기 ── */
   function openModal(id){ document.getElementById(id).classList.add('open'); }
@@ -1679,6 +1703,8 @@
     document.getElementById('tabCompany').classList.toggle('active', type==='company');
     const vg = document.getElementById('vehicleGroup');
     const rg = document.getElementById('regionGroup');
+    const ln = document.getElementById('lblName');
+    if(ln) ln.textContent = (type==='company') ? '담당자명' : '이름';
     if(type==='company'){
       vg.innerHTML='<label>회사명</label><input type="text" placeholder="회사명을 입력하세요">';
       rg.innerHTML='<label>사업자 번호</label><input type="text" placeholder="000-00-00000">';
@@ -1691,27 +1717,92 @@
   /* ════════════════════════════════════════
      로그인 처리 (관리자 vs 일반)
   ════════════════════════════════════════ */
-  function doLogin(){
+  async function doLogin(){
     const id = document.getElementById('loginEmail').value.trim();
     const pw = document.getElementById('loginPw').value;
     if(!id || !pw){ alert('아이디와 비밀번호를 입력해 주세요.'); return; }
 
+    /* ── 관리자 로그인 ── */
     if(id === ADMIN_ID && pw === ADMIN_PW){
-      /* ── 관리자 로그인 ── */
       isAdmin = true;
       closeModal('modalLogin');
       showAdminBar();
       showSuccess('🔐','관리자 로그인 성공!','박종찬 관리자님, 환영합니다!\n관리자 메뉴가 활성화되었습니다.');
+      return;
+    }
+
+    /* ── 일반/기업 회원 로그인 (서버 검증) ── */
+    const btn = document.querySelector('#loginUserForm .btn-modal-submit');
+    if(btn){ btn.disabled = true; btn.textContent = '확인 중...'; }
+    let res = null;
+    try{
+      const h = await sha256Hex(pw);
+      res = await backendJsonp({ action:'login', id:id, h:h });
+    }catch(e){
+      if(btn){ btn.disabled=false; btn.textContent='로그인'; }
+      alert('서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      return;
+    }
+    if(btn){ btn.disabled=false; btn.textContent='로그인'; }
+
+    if(!res || !res.ok){
+      alert('아이디 또는 비밀번호가 일치하지 않습니다.\n아직 회원이 아니시면 먼저 회원가입을 해주세요.');
+      return;
+    }
+    currentUser = { id:id, type:res.type, status:res.status, name:res.name, email:res.email, company:res.company };
+    try{ sessionStorage.setItem('haegwang_user', JSON.stringify(currentUser)); }catch(e){}
+    document.getElementById('loginPw').value = '';
+    closeModal('modalLogin');
+    showUserState();
+    if(res.type === 'company' && res.status !== '승인완료'){
+      showSuccess('⏳','로그인 성공 (승인 대기)', (res.name||'')+'님, 로그인되었습니다.\n기업회원 승인 대기 중입니다. 관리자 승인 후 구인공고 등록이 가능합니다.');
+    } else if(res.type === 'company'){
+      showSuccess('🏢','로그인 성공!', (res.name||'')+'님, 환영합니다!\n구인공고를 등록하실 수 있습니다.');
     } else {
-      /* ── 일반 회원 로그인 ── */
-      closeModal('modalLogin');
-      showSuccess('🎉','로그인 성공!','환영합니다! 전국 채용공고를 자유롭게 이용하세요.');
+      showSuccess('🎉','로그인 성공!', (res.name||'')+'님, 환영합니다!\n채용공고 열람·이력서 등록을 이용하세요.');
     }
   }
 
   function socialLogin(type){
-    closeModal('modalLogin');
-    showSuccess('🎉',type+' 로그인 성공!','환영합니다! 전국 채용공고를 자유롭게 이용하세요.');
+    alert(type+' 로그인은 준비 중입니다. 아이디로 로그인해 주세요.');
+  }
+
+  /* ── 로그인 상태 표시 / 일반 회원 로그아웃 ── */
+  function showUserState(){
+    if(!currentUser) return;
+    const lb = document.querySelector('.btn-login');
+    const jb = document.querySelector('.btn-join');
+    if(lb){ lb.textContent='👤 '+(currentUser.name||currentUser.id); lb.style.background='#1a3a8a'; lb.style.color='#fff'; lb.onclick=function(e){e.preventDefault();}; }
+    if(jb){ jb.textContent='로그아웃'; jb.style.background='#FF3B30'; jb.style.borderColor='#FF3B30'; jb.onclick=function(e){e.preventDefault(); doUserLogout();}; }
+  }
+  function doUserLogout(){
+    currentUser = null;
+    try{ sessionStorage.removeItem('haegwang_user'); }catch(e){}
+    const lb = document.querySelector('.btn-login');
+    const jb = document.querySelector('.btn-join');
+    if(lb){ lb.textContent='로그인'; lb.style.background=''; lb.style.color=''; lb.onclick=function(e){e.preventDefault(); openModal('modalLogin');}; }
+    if(jb){ jb.textContent='회원가입'; jb.style.background=''; jb.style.borderColor=''; jb.onclick=function(e){e.preventDefault(); openModal('modalJoin');}; }
+    showSuccess('👋','로그아웃','로그아웃되었습니다.');
+  }
+
+  /* ── 구인공고 등록 권한 체크 (기업회원 승인자 또는 관리자만) ── */
+  function postJobAttempt(){
+    if(isAdmin){ openAddJob(); return; }
+    if(!currentUser){
+      alert('구인공고 등록은 로그인 후 이용 가능합니다.\n기업회원으로 가입·승인 후 등록하실 수 있습니다.');
+      openModal('modalLogin'); return;
+    }
+    if(currentUser.type !== 'company'){
+      alert('기사회원은 구인공고를 등록할 수 없습니다.\n(채용공고 열람 · 이력서 등록만 이용 가능합니다.)');
+      return;
+    }
+    if(currentUser.status !== '승인완료'){
+      alert('기업회원 승인 후 구인공고 등록이 가능합니다.\n관리자 승인을 기다려 주세요. (승인 시 이메일로 안내드립니다.)');
+      return;
+    }
+    openAddJob();
+    var c = document.getElementById('aj_company');
+    if(c && !c.value) c.value = currentUser.company || currentUser.name || '';
   }
 
   /* ════════════════════════════════════════
@@ -1805,37 +1896,58 @@
   /* ════════════════════════════════════════
      회원가입 처리
   ════════════════════════════════════════ */
-  function doJoin(){
+  async function doJoin(){
+    const userid = document.getElementById('joinUserId').value.trim();
     const name  = document.getElementById('joinName').value.trim();
     const phone = document.getElementById('joinPhone').value.trim();
     const email = document.getElementById('joinEmail').value.trim();
     const pw    = document.getElementById('joinPw').value;
     const agree = document.getElementById('agreeAll').checked;
-    if(!name || !phone || !email || !pw){ alert('모든 항목을 입력해 주세요.'); return; }
+    if(!userid || !name || !phone || !email || !pw){ alert('모든 항목을 입력해 주세요.'); return; }
+    if(!/^[A-Za-z0-9_]{4,20}$/.test(userid)){ alert('아이디는 영문/숫자 4~20자로 입력해 주세요.'); return; }
+    if(pw.length < 6){ alert('비밀번호는 6자 이상으로 입력해 주세요.'); return; }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ alert('올바른 이메일 주소를 입력해 주세요.'); return; }
     if(!agree){ alert('이용약관 및 개인정보처리방침에 동의해 주세요.'); return; }
-    /* 회원 정보 저장 (관리자 회원관리용) */
+
+    const btn = document.querySelector('#joinForm .btn-modal-submit');
+    if(btn){ btn.disabled = true; btn.textContent = '처리 중...'; }
+
+    /* 아이디 중복 확인 */
+    try{
+      const chk = await backendJsonp({ action:'checkid', id:userid });
+      if(chk && chk.exists){
+        if(btn){ btn.disabled=false; btn.textContent='✅ 가입 완료'; }
+        alert('이미 사용 중인 아이디입니다. 다른 아이디를 입력해 주세요.');
+        return;
+      }
+    }catch(e){ /* 확인 실패 시에도 가입은 진행 */ }
+
     const vgEl = document.querySelector('#vehicleGroup select, #vehicleGroup input');
     const rgEl = document.querySelector('#regionGroup select, #regionGroup input');
     const isCompany = (currentTab === 'company');
+    const pwhash = await sha256Hex(pw);
     const member = {
       type: isCompany ? 'company' : 'driver',
+      userid: userid,
       name: name, phone: phone, email: email,
       extra1: vgEl ? vgEl.value.trim() : '',   // 기사=차종 / 기업=회사명
       extra2: rgEl ? rgEl.value.trim() : '',   // 기사=지역 / 기업=사업자번호
-      status: isCompany ? 'pending' : 'active', // 기업회원은 관리자 승인 필요
+      status: isCompany ? '승인대기' : '활동중',
       ts: Date.now()
     };
-    const members = loadMembers();
-    members.unshift(member);
-    try { localStorage.setItem(MEMBERS_KEY, JSON.stringify(members)); } catch(e){}
-    try { submitMemberToSheet(member); } catch(e){}
+    /* 보조: 로컬 저장 (관리자 회원관리 화면용) */
+    try { const members = loadMembers(); members.unshift(member); localStorage.setItem(MEMBERS_KEY, JSON.stringify(members)); } catch(e){}
+    /* 백엔드(구글시트)로 전송 — 비밀번호는 해시로만 전송 */
+    try { submitMemberToSheet(member, pwhash); } catch(e){}
+
+    if(btn){ btn.disabled=false; btn.textContent='✅ 가입 완료'; }
     closeModal('modalJoin');
     if(isCompany){
-      showSuccess('🏢','기업회원 가입 신청 완료!', name + '님, 가입 신청이 접수되었습니다.\n관리자 확인·승인 후 구인공고 등록 등 활동이 가능합니다.');
+      showSuccess('🏢','기업회원 가입 신청 완료!', name + '님, 가입 신청이 접수되었습니다.\n작성하신 이메일로 안내 메일을 보내드렸습니다.\n관리자 승인 후 구인공고 등록이 가능합니다.');
     } else {
-      showSuccess('🎉','회원가입 완료!', name + '님, 가입을 환영합니다!\n이제 전국 채용공고를 자유롭게 이용하세요.');
+      showSuccess('🎉','회원가입 완료!', name + '님, 가입을 환영합니다!\n입력하신 아이디로 로그인해 채용공고·이력서 등록을 이용하세요.');
     }
-    ['joinName','joinPhone','joinEmail','joinPw'].forEach(id=>document.getElementById(id).value='');
+    ['joinUserId','joinName','joinPhone','joinEmail','joinPw'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
     document.getElementById('agreeAll').checked = false;
   }
 
@@ -1849,11 +1961,14 @@
 
   /* 회원가입 정보를 구글시트(Apps Script 웹앱)로 자동 전송 → 대표 시트에 저장 */
   const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwXgo6OHo7zbW2chGv5eW2JsphWjMTV4hNq4iaJfVyS2SdbgKnc3SSPVr555kqkP_zy/exec';
-  function submitMemberToSheet(m){
+  function submitMemberToSheet(m, pwhash){
     try{
       if(!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.indexOf('script.google.com') < 0) return;
       const data = new URLSearchParams();
+      data.append('action', 'signup');
       data.append('type',   m.type   || '');
+      data.append('userid', m.userid || '');
+      data.append('pwhash', pwhash   || '');
       data.append('name',   m.name   || '');
       data.append('phone',  m.phone  || '');
       data.append('email',  m.email  || '');
@@ -2202,11 +2317,14 @@
   }
 
   function wireUiControls(){
+    /* 세션 로그인 복원 */
+    try{ const su = sessionStorage.getItem('haegwang_user'); if(su){ currentUser = JSON.parse(su); } }catch(e){}
     /* 헤더 로그인 / 회원가입 버튼 */
     const loginBtn = document.querySelector('.btn-login');
     const joinBtn  = document.querySelector('.btn-join');
-    if(loginBtn) loginBtn.addEventListener('click', function(e){ e.preventDefault(); if(!isAdmin) openModal('modalLogin'); });
-    if(joinBtn)  joinBtn.addEventListener('click',  function(e){ e.preventDefault(); if(!isAdmin) openModal('modalJoin'); });
+    if(loginBtn) loginBtn.addEventListener('click', function(e){ e.preventDefault(); if(!isAdmin && !currentUser) openModal('modalLogin'); });
+    if(joinBtn)  joinBtn.addEventListener('click',  function(e){ e.preventDefault(); if(!isAdmin && !currentUser) openModal('modalJoin'); });
+    if(currentUser) showUserState();
 
     /* 필터 버튼: 활성 토글 (+ 전체 = 리셋) */
     document.querySelectorAll('.filter-bar .filter-btn').forEach(btn=>{
