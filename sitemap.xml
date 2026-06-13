@@ -104,6 +104,12 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://whdcks498.github.io/haegwang/diesel-price.html</loc>
+    <lastmod>2026-06-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
 
   <!-- 매일 자동 SEO 글 -->
   <url>
