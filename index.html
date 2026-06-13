@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <title>화물구인구직 - 전국 화물기사 채용 1위 플랫폼 | 해광 화물운송</title>
 
 <!-- ══ 네이버 / 구글 SEO 공통 ══ -->
@@ -93,7 +94,7 @@
 </script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'맑은 고딕','Malgun Gothic',sans-serif; background:#f4f6f9; color:#333; }
+  body { font-family:'Pretendard','맑은 고딕','Malgun Gothic',-apple-system,sans-serif; background:#f4f6f9; color:#333; -webkit-font-smoothing:antialiased; letter-spacing:-0.2px; }
 
   /* ── 헤더 ── */
   header {
@@ -107,35 +108,53 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:12px 20px;
   }
-  .logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
-  .logo svg { width:48px; height:48px; }
-  .logo-text { line-height:1.1; }
-  .logo-text .main { font-size:22px; font-weight:900; color:#1a3a8a; letter-spacing:-0.5px; }
-  .logo-text .sub  { font-size:11px; color:#888; }
+  .logo { display:flex; align-items:center; gap:11px; text-decoration:none; }
+  .logo svg { width:42px; height:42px; }
+  .logo-text { line-height:1.15; }
+  .logo-text .main { font-size:20px; font-weight:700; color:#1a3a8a; letter-spacing:-0.4px; }
+  .logo-text .sub  { font-size:11px; font-weight:400; color:#9aa1ad; letter-spacing:-0.2px; }
 
-  nav { display:flex; gap:6px; }
-  nav a {
-    padding:8px 16px; border-radius:6px; text-decoration:none;
-    font-size:14px; font-weight:600; color:#444;
-    transition:all .2s;
+  nav { display:flex; gap:2px; align-items:center; }
+  nav a, .nav-drop-toggle {
+    padding:9px 14px; border-radius:8px; text-decoration:none;
+    font-size:15px; font-weight:500; color:#3d4350; white-space:nowrap;
+    transition:background .15s, color .15s; cursor:pointer;
   }
-  nav a:hover { background:#f0f3ff; color:#1a3a8a; }
+  nav a:hover, .nav-drop:hover .nav-drop-toggle { background:#eef2fb; color:#1a3a8a; }
   nav a.active { color:#1a3a8a; }
 
-  .header-btns { display:flex; gap:8px; }
+  .nav-drop { position:relative; }
+  .nav-drop-toggle { display:inline-flex; align-items:center; gap:3px; }
+  .nav-drop-menu {
+    position:absolute; top:calc(100% + 6px); left:0; min-width:152px;
+    background:#fff; border:1px solid #e8ebf2; border-radius:10px;
+    box-shadow:0 8px 24px rgba(20,40,90,.12); padding:6px;
+    opacity:0; visibility:hidden; transform:translateY(-4px);
+    transition:opacity .15s, transform .15s, visibility .15s; z-index:1100;
+  }
+  .nav-drop:hover .nav-drop-menu { opacity:1; visibility:visible; transform:translateY(0); }
+  .nav-drop-menu a { display:block; padding:9px 12px; font-size:14px; font-weight:400; color:#3d4350; border-radius:7px; white-space:nowrap; }
+  .nav-drop-menu a:hover { background:#eef2fb; color:#1a3a8a; }
+
+  .header-btns { display:flex; gap:8px; align-items:center; }
+  .btn-phone {
+    display:inline-flex; align-items:center; gap:5px; padding:8px 12px;
+    font-size:13.5px; font-weight:500; color:#e5484d; text-decoration:none;
+    border-radius:8px; transition:background .15s;
+  }
+  .btn-phone:hover { background:#fdecec; }
   .btn-login {
-    padding:8px 18px; border:2px solid #1a3a8a; border-radius:8px;
-    color:#1a3a8a; font-weight:700; font-size:13px;
-    background:#fff; cursor:pointer; text-decoration:none;
-    transition:all .2s;
+    padding:8px 16px; border:1px solid #c7cfe2; border-radius:8px;
+    color:#1a3a8a; font-weight:500; font-size:14px;
+    background:#fff; cursor:pointer; text-decoration:none; transition:all .15s;
   }
-  .btn-login:hover { background:#1a3a8a; color:#fff; }
+  .btn-login:hover { background:#f0f3ff; }
   .btn-join {
-    padding:8px 18px; border:2px solid #1a3a8a; border-radius:8px;
-    background:#1a3a8a; color:#fff; font-weight:700; font-size:13px;
-    cursor:pointer; text-decoration:none; transition:all .2s;
+    padding:8px 18px; border:1px solid #f2c200; border-radius:8px;
+    background:#FFD700; color:#1a237e; font-weight:600; font-size:14px;
+    cursor:pointer; text-decoration:none; transition:all .15s;
   }
-  .btn-join:hover { background:#0d2a6e; }
+  .btn-join:hover { background:#ffca28; }
 
   /* ── 히어로 ── */
   .hero {
@@ -569,12 +588,19 @@
       <a href="#resume">이력서등록</a>
       <a href="#company">기업회원</a>
       <a href="#about">회사소개</a>
-      <a href="guide.html">취업정보</a>
-      <a href="news.html">뉴스</a><a href="haegwangtoon.html">해광툰</a><a href="diesel-price.html">오늘의 경유값</a>
-      <a href="#" style="color:#FF3B30;font-weight:900;">📞 고객센터</a>
+      <div class="nav-drop">
+        <span class="nav-drop-toggle">정보 <span style="font-size:11px">▾</span></span>
+        <div class="nav-drop-menu">
+          <a href="guide.html">취업정보</a>
+          <a href="news.html">뉴스</a>
+          <a href="haegwangtoon.html">해광툰</a>
+          <a href="diesel-price.html">오늘의 경유값</a>
+        </div>
+      </div>
     </nav>
 
     <div class="header-btns">
+      <a href="tel:01072333916" class="btn-phone">📞 고객센터</a>
       <a href="#" class="btn-login">로그인</a>
       <a href="#" class="btn-join">회원가입</a>
     </div>
