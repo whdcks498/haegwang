@@ -258,6 +258,11 @@
   .filter-btn:hover, .filter-btn.on { border-color:#1a3a8a; color:#1a3a8a; background:#f0f3ff; font-weight:700; }
 
   .job-list { display:flex; flex-direction:column; gap:14px; }
+  .job-pagination{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin-top:28px;}
+  .job-pagination .pg-btn{min-width:40px;height:40px;padding:0 12px;border:1.5px solid #d3d9e6;background:#fff;color:#1a3a8a;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;}
+  .job-pagination .pg-btn:hover:not(:disabled){background:#1a3a8a;color:#fff;border-color:#1a3a8a;}
+  .job-pagination .pg-btn.on{background:#1a3a8a;color:#fff;border-color:#1a3a8a;}
+  .job-pagination .pg-btn:disabled{opacity:.4;cursor:default;}
   .job-card {
     background:#fff; border-radius:14px; padding:20px 24px;
     border:1.5px solid #eee; cursor:pointer;
@@ -1527,14 +1532,8 @@
 
     </div><!-- /job-list -->
 
-    <!-- 더보기 -->
-    <div style="text-align:center;margin-top:24px">
-      <a href="#" style="display:inline-block;padding:14px 48px;border:2px solid #1a3a8a;border-radius:10px;color:#1a3a8a;font-weight:700;text-decoration:none;font-size:15px;transition:all .2s"
-         onmouseover="this.style.background='#1a3a8a';this.style.color='#fff'"
-         onmouseout="this.style.background='';this.style.color='#1a3a8a'">
-        채용공고 더보기 →
-      </a>
-    </div>
+    <!-- 페이지네이션 -->
+    <div id="job-pagination" class="job-pagination"></div>
 
     <!-- 서비스 소개 -->
     <div class="service-section" style="margin-top:40px" id="about">
@@ -2775,6 +2774,37 @@
     const cnt = document.querySelector('.job-header .count');
     if(cnt) cnt.textContent = '총 ' + n + '건의 공고';
   }
+  /* ── 채용공고 페이지네이션 ── */
+  var JOB_PAGE_SIZE = 8;
+  var jobCurrentPage = 1;
+  function matchedJobCards(){
+    return [...document.querySelectorAll('.job-list .job-card')].filter(c=> c.dataset.matched !== '0');
+  }
+  function renderJobPage(p){
+    const cards = matchedJobCards();
+    const total = cards.length;
+    const pages = Math.max(1, Math.ceil(total / JOB_PAGE_SIZE));
+    p = Math.min(Math.max(1, (p|0) || 1), pages);
+    jobCurrentPage = p;
+    document.querySelectorAll('.job-list .job-card').forEach(c=>{ c.style.display='none'; });
+    const start = (p-1)*JOB_PAGE_SIZE;
+    cards.slice(start, start+JOB_PAGE_SIZE).forEach(c=> c.style.display='');
+    updateCount(total);
+    renderJobPagination(pages);
+  }
+  function renderJobPagination(pages){
+    const box = document.getElementById('job-pagination');
+    if(!box) return;
+    if(pages <= 1){ box.innerHTML=''; return; }
+    let html = '<button class="pg-btn pg-nav" '+(jobCurrentPage<=1?'disabled':'')+' onclick="gotoJobPage('+(jobCurrentPage-1)+')">\u2039 \uc774\uc804</button>';
+    let s = Math.max(1, jobCurrentPage-3), e = Math.min(pages, s+6); s = Math.max(1, e-6);
+    for(let i=s;i<=e;i++){
+      html += '<button class="pg-btn pg-num'+(i===jobCurrentPage?' on':'')+'" onclick="gotoJobPage('+i+')">'+i+'</button>';
+    }
+    html += '<button class="pg-btn pg-nav" '+(jobCurrentPage>=pages?'disabled':'')+' onclick="gotoJobPage('+(jobCurrentPage+1)+')">\ub2e4\uc74c \u203a</button>';
+    box.innerHTML = html;
+  }
+  function gotoJobPage(p){ renderJobPage(p); scrollToJobs(); }
   function filterJobs(typeQ, regionQ, keywordQ){
     const tk = tonToken(typeQ);
     const regions = (regionQ||'').split('/').map(s=>s.trim()).filter(Boolean);
@@ -2792,16 +2822,15 @@
       const anyRegion = regionText.indexOf('전국') > -1;
       if(regions.length && !anyRegion) ok = ok && regions.some(r=>regionText.indexOf(r) > -1);
       if(kw) ok = ok && (card.textContent.indexOf(kw) > -1);
-      card.style.display = ok ? '' : 'none';
+      card.dataset.matched = ok ? '1' : '0';
       if(ok) shown++;
     });
-    updateCount(shown);
+    renderJobPage(1);
     scrollToJobs();
   }
   function resetJobFilter(){
-    const cards = document.querySelectorAll('.job-list .job-card');
-    cards.forEach(c=>c.style.display='');
-    updateCount(cards.length);
+    document.querySelectorAll('.job-list .job-card').forEach(c=>{ c.dataset.matched='1'; });
+    renderJobPage(1);
   }
 
   function wireUiControls(){
@@ -3001,6 +3030,7 @@
     /* 카드 / UI 컨트롤 연결 */
     wireJobCards();
     wireUiControls();
+    renderJobPage(1);
   });
 </script>
 </body>
