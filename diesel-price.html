@@ -4,89 +4,113 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>오늘의 경유값 (전국·지역별 디젤 가격) | 화물기사 필수정보 - 해광 화물운송</title>
-<meta name="description" content="오늘의 전국·시도별 경유(디젤) 평균 가격을 한눈에. 화물기사에게 꼭 필요한 주유 정보. 가장 싼 지역부터 정렬. 전국 화물기사 구인구직 해광 화물운송.">
-<meta name="keywords" content="오늘의 경유값, 경유 가격, 디젤 가격, 전국 경유 평균, 시도별 경유값, 주유소 경유, 화물기사 주유, 해광 화물운송, 화물구인구직">
+<meta name="description" content="오늘의 전국·시도별 경유(디젤) 평균 가격을 한눈에. 휘발유·고급휘발유·LPG까지. 가장 싼 지역부터 정렬, 가격 비교 막대그래프. 화물기사 주유 절약 팁. 전국 화물기사 구인구직 해광 화물운송.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://whdcks498.github.io/haegwang/diesel-price.html">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
 <meta property="og:title" content="오늘의 경유값 — 전국·지역별 디젤 가격">
-<meta property="og:description" content="화물기사 필수 정보! 오늘의 전국·시도별 경유 가격을 매일 업데이트.">
-<style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Malgun Gothic','맑은 고딕',-apple-system,sans-serif;color:#222;background:#f7f8fb;line-height:1.7;}
-  .top{background:linear-gradient(135deg,#1a3a8a,#2563c8);color:#fff;padding:30px 20px;text-align:center;}
-  .top a.home{color:#FFD700;font-size:13px;font-weight:700;text-decoration:none;}
-  .top h1{font-size:24px;margin:10px 0 6px;}
-  .top p{color:#dbe4ff;font-size:13px;}
-  .wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px;}
-  .hero{background:#fff;border-radius:16px;padding:26px 20px;text-align:center;box-shadow:0 4px 14px rgba(26,58,138,.08);margin-bottom:20px;border-top:4px solid #FFD700;}
-  .hero .label{font-size:14px;color:#888;font-weight:700;}
-  .hero .price{font-size:46px;font-weight:900;color:#1a3a8a;margin:6px 0;}
-  .hero .price span{font-size:20px;color:#888;}
-  .hero .diff{font-size:15px;font-weight:800;}
-  .down{color:#1a73e8;} .up{color:#e53935;} .same{color:#888;}
-  .date{font-size:12px;color:#999;margin-top:8px;}
-  .sec-title{font-size:17px;font-weight:800;color:#1a3a8a;margin:6px 0 12px;padding-bottom:8px;border-bottom:2px solid #FFD700;}
-  table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(26,58,138,.06);font-size:14.5px;}
-  th{background:#1a3a8a;color:#fff;padding:11px 8px;}
-  td{padding:11px 10px;border-bottom:1px solid #eef0f5;text-align:center;}
-  tr:last-child td{border-bottom:none;}
-  td.region{text-align:left;font-weight:700;}
-  td.price{font-weight:800;color:#1a2540;}
-  .rank{display:inline-block;width:22px;height:22px;line-height:22px;border-radius:50%;font-size:12px;font-weight:800;color:#fff;background:#9aa7c2;}
-  .rank.top{background:#03C75A;}
-  .cta{background:linear-gradient(135deg,#FFD700,#FFC107);border-radius:16px;padding:24px 20px;text-align:center;margin-top:22px;}
-  .cta h2{color:#1a237e;font-size:19px;}
-  .cta p{color:#5a4a00;font-weight:700;font-size:14px;margin-top:4px;}
-  .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
-  .btn{display:inline-block;padding:13px 22px;border-radius:10px;font-weight:800;font-size:15px;text-decoration:none;}
-  .btn-call{background:#1a3a8a;color:#fff;} .btn-site{background:#fff;color:#1a3a8a;border:2px solid #1a3a8a;}
-  .src{font-size:12px;color:#999;text-align:center;margin-top:20px;line-height:1.6;}
-  @media(max-width:600px){.hero .price{font-size:38px;} td,th{padding:9px 5px;font-size:13px;}}
-</style>
+<meta property="og:description" content="전국·시도별 경유(디젤)·휘발유·LPG 평균가를 한눈에. 가장 싼 지역부터. 화물기사 필수정보.">
+<meta property="og:url" content="https://whdcks498.github.io/haegwang/diesel-price.html">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="화물구인구직">
 <meta property="og:image" content="https://whdcks498.github.io/haegwang/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://whdcks498.github.io/haegwang/og-image.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://whdcks498.github.io/haegwang/"},{"@type":"ListItem","position":2,"name":"오늘의 경유값 (전국·지역별 디젤 가격)","item":"https://whdcks498.github.io/haegwang/diesel-price.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://whdcks498.github.io/haegwang/"},{"@type":"ListItem","position":2,"name":"오늘의 경유값","item":"https://whdcks498.github.io/haegwang/diesel-price.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"경유값은 얼마나 자주 바뀌나요?","acceptedAnswer":{"@type":"Answer","text":"주유소 가격은 매일 변동되며, 본 페이지의 전국·시도별 평균가는 한국석유공사 오피넷 자료를 기준으로 매일 업데이트됩니다."}},
+{"@type":"Question","name":"전국에서 경유가 가장 싼 지역은 어디인가요?","acceptedAnswer":{"@type":"Answer","text":"일반적으로 대구·부산·울산 등 영남권이 낮은 편이고, 서울·제주가 높은 편입니다. 본 페이지 시도별 표에서 가장 싼 지역부터 순서대로 확인할 수 있습니다."}},
+{"@type":"Question","name":"화물차 주유비를 아끼는 방법이 있나요?","acceptedAnswer":{"@type":"Answer","text":"화물복지카드·주유할인 제휴카드 활용, 셀프주유소·고속도로 외 지역 주유, 경제속도(80~90km/h) 정속주행, 공회전 줄이기, 타이어 공기압 관리로 연비를 높일 수 있습니다."}}
+]}</script>
+<style>
+:root{--navy:#15326f;--navy2:#0f2552;--gold:#ffd400;--ink:#1e2330;--mute:#64748b;--bg:#f4f6fb;--line:#e3e8f2;--green:#1f8a53;--red:#c0392b;}
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고딕',sans-serif;margin:0;background:var(--bg);color:var(--ink);line-height:1.6;}
+.top{background:linear-gradient(135deg,#15326f,#0f2552);color:#fff;padding:18px 20px 24px;}
+.top .home{color:#cdd7ea;font-size:13px;text-decoration:none;}
+.top h1{font-size:26px;margin:10px 0 4px;}
+.top p{margin:0;color:#cdd7ea;font-size:13.5px;}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 60px;}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:-16px 0 22px;}
+@media(max-width:640px){.cards{grid-template-columns:repeat(2,1fr);}}
+.card{background:#fff;border-radius:14px;padding:14px 14px 16px;box-shadow:0 4px 16px rgba(21,50,111,.08);}
+.card .nm{font-size:13px;color:var(--mute);font-weight:700;}
+.card.lead{outline:2px solid var(--navy);}
+.card .pr{font-size:24px;font-weight:900;color:var(--navy);margin-top:6px;letter-spacing:-.5px;}
+.card .pr small{font-size:12px;color:var(--mute);font-weight:600;}
+.card .df{font-size:12.5px;font-weight:700;margin-top:3px;}
+.df.down{color:var(--green)} .df.up{color:var(--red)}
+.meta{font-size:12.5px;color:var(--mute);text-align:right;margin:-10px 0 18px;}
+.sec-title{font-size:18px;font-weight:800;margin:26px 0 12px;}
+.tbl{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 16px rgba(21,50,111,.07);}
+.row{display:grid;grid-template-columns:42px 1fr 96px;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--line);}
+.row:last-child{border-bottom:none}
+.row.head{background:#eef2fb;font-size:12.5px;color:var(--mute);font-weight:700;padding:9px 14px;}
+.rank{width:26px;height:26px;border-radius:8px;background:#eef2fb;color:var(--navy);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.rank.t1{background:#fff7d6;color:#8a6d00} .rank.t2{background:#e9f5ee;color:var(--green)}
+.rg{font-weight:700;font-size:14.5px;min-width:42px;}
+.bar{height:8px;border-radius:6px;background:linear-gradient(90deg,#3a63b8,#15326f);margin-top:5px;}
+.cheap .bar{background:linear-gradient(90deg,#36c47e,#1f8a53)} .high .bar{background:linear-gradient(90deg,#e8746c,#c0392b)}
+.val{text-align:right} .val .p{font-weight:800;font-size:14px} .val .d{font-size:11.5px;font-weight:700}
+.tag{display:inline-block;font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:6px;margin-left:6px;vertical-align:middle}
+.tag.c{background:#e6f4ea;color:var(--green)} .tag.h{background:#fbe4e4;color:var(--red)}
+.tips{background:#fff;border-radius:14px;padding:18px 18px 6px;box-shadow:0 4px 16px rgba(21,50,111,.07);margin-top:14px;}
+.tips h3{margin:0 0 10px;font-size:16px;color:var(--navy)}
+.tips li{font-size:14px;margin-bottom:8px;color:#333}
+.faq{margin-top:14px}
+.faq details{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 3px 12px rgba(21,50,111,.06);margin-bottom:8px}
+.faq summary{font-weight:700;cursor:pointer;font-size:14.5px;color:var(--ink)}
+.faq p{margin:8px 0 0;font-size:13.5px;color:#444}
+.cta{background:linear-gradient(135deg,#15326f,#0f2552);color:#fff;border-radius:16px;padding:24px 20px;text-align:center;margin-top:26px;}
+.cta h2{margin:0 0 6px;font-size:20px} .cta p{margin:0 0 16px;color:#cdd7ea;font-size:13.5px}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{padding:13px 22px;border-radius:10px;font-weight:800;text-decoration:none;font-size:15px}
+.btn-call{background:var(--gold);color:var(--navy)} .btn-site{background:#fff;color:var(--navy)}
+.src{font-size:12px;color:var(--mute);text-align:center;margin-top:22px;line-height:1.7}
+</style>
 </head>
 <body>
 <header class="top">
   <a class="home" href="https://whdcks498.github.io/haegwang/">← 화물구인구직 홈으로</a>
   <h1>⛽ 오늘의 경유값</h1>
-  <p>화물기사 필수정보 · 전국·지역별 경유(디젤) 평균가 · 매일 업데이트</p>
+  <p>화물기사 필수정보 · 전국·지역별 유가 · 한국석유공사 오피넷 기준 · 매일 업데이트</p>
 </header>
-
 <main class="wrap">
+  <div class="cards" id="fuelCards">
+    <div class="card lead"><div class="nm">경유(자동차용)</div><div class="pr" id="p-diesel">–<small> 원/L</small></div><div class="df" id="d-diesel"></div></div>
+    <div class="card"><div class="nm">휘발유</div><div class="pr" id="p-gasoline">–<small> 원/L</small></div><div class="df" id="d-gasoline"></div></div>
+    <div class="card"><div class="nm">고급휘발유</div><div class="pr" id="p-premium">–<small> 원/L</small></div><div class="df" id="d-premium"></div></div>
+    <div class="card"><div class="nm">LPG(부탄)</div><div class="pr" id="p-lpg">–<small> 원/L</small></div><div class="df" id="d-lpg"></div></div>
+  </div>
+  <div class="meta" id="meta">전국 평균 · 기준일 불러오는 중…</div>
 
-  <div class="hero">
-    <div class="label">전국 평균 경유(자동차용)</div>
-    <div class="price">2,004.43<span>원/L</span></div>
-    <div class="diff down">▼ 0.17원 (전일 대비)</div>
-    <div class="date">기준일: 2026-06-13 · 출처 오피넷(한국석유공사)</div>
+  <div class="sec-title">📍 시도별 경유 가격 <span style="font-size:13px;color:var(--mute);font-weight:600">(싼 지역 순)</span></div>
+  <div class="tbl">
+    <div class="row head"><div>순위</div><div>지역 · 가격대 비교</div><div style="text-align:right">경유 평균</div></div>
+    <div id="regionRows"></div>
   </div>
 
-  <div class="sec-title">📍 시도별 경유 가격 (싼 지역 순)</div>
-  <table>
-    <tr><th>순위</th><th>지역</th><th>경유 평균</th><th>전일대비</th></tr>
-    <tr><td><span class="rank top">1</span></td><td class="region">대구</td><td class="price">1,983.44원</td><td class="down">▼0.16</td></tr>
-    <tr><td><span class="rank top">2</span></td><td class="region">부산</td><td class="price">1,989.39원</td><td class="down">▼0.34</td></tr>
-    <tr><td><span class="rank top">3</span></td><td class="region">울산</td><td class="price">1,992.66원</td><td class="up">▲0.16</td></tr>
-    <tr><td><span class="rank">4</span></td><td class="region">대전</td><td class="price">1,995.13원</td><td class="down">▼0.12</td></tr>
-    <tr><td><span class="rank">5</span></td><td class="region">광주</td><td class="price">1,996.07원</td><td class="up">▲0.10</td></tr>
-    <tr><td><span class="rank">6</span></td><td class="region">경북</td><td class="price">1,997.78원</td><td class="down">▼0.32</td></tr>
-    <tr><td><span class="rank">7</span></td><td class="region">경남</td><td class="price">1,998.80원</td><td class="down">▼0.28</td></tr>
-    <tr><td><span class="rank">8</span></td><td class="region">세종</td><td class="price">2,001.97원</td><td class="down">▼0.01</td></tr>
-    <tr><td><span class="rank">9</span></td><td class="region">인천</td><td class="price">2,002.16원</td><td class="down">▼0.13</td></tr>
-    <tr><td><span class="rank">10</span></td><td class="region">전북</td><td class="price">2,002.65원</td><td class="up">▲0.16</td></tr>
-    <tr><td><span class="rank">11</span></td><td class="region">경기</td><td class="price">2,003.60원</td><td class="down">▼0.08</td></tr>
-    <tr><td><span class="rank">12</span></td><td class="region">충남</td><td class="price">2,008.72원</td><td class="down">▼0.29</td></tr>
-    <tr><td><span class="rank">13</span></td><td class="region">충북</td><td class="price">2,010.29원</td><td class="down">▼0.08</td></tr>
-    <tr><td><span class="rank">14</span></td><td class="region">전남</td><td class="price">2,010.87원</td><td class="down">▼0.57</td></tr>
-    <tr><td><span class="rank">15</span></td><td class="region">강원</td><td class="price">2,012.56원</td><td class="down">▼0.15</td></tr>
-    <tr><td><span class="rank">16</span></td><td class="region">제주</td><td class="price">2,019.10원</td><td class="down">▼0.16</td></tr>
-    <tr><td><span class="rank">17</span></td><td class="region">서울</td><td class="price">2,040.78원</td><td class="up">▲0.01</td></tr>
-  </table>
+  <div class="sec-title">💡 화물기사 주유비 절약 팁</div>
+  <div class="tips">
+    <ul>
+      <li><b>화물복지카드·주유 제휴카드</b>로 L당 수십 원 할인받으세요(유가보조금·카드할인 중복 가능).</li>
+      <li><b>경제속도 정속주행</b>(80~90km/h)과 <b>공회전 줄이기</b>만으로 연비가 눈에 띄게 좋아집니다.</li>
+      <li><b>타이어 공기압·불필요한 적재 정리</b>로 연료 손실을 줄이세요.</li>
+      <li>가격이 싼 <b>영남권·셀프주유소</b>를 노선에 맞춰 활용하면 누적 절감액이 큽니다.</li>
+    </ul>
+  </div>
+
+  <div class="sec-title">❓ 자주 묻는 질문</div>
+  <div class="faq">
+    <details><summary>경유값은 얼마나 자주 바뀌나요?</summary><p>주유소 가격은 매일 변동됩니다. 본 페이지의 전국·시도별 평균가는 한국석유공사 오피넷 자료를 기준으로 매일 업데이트됩니다.</p></details>
+    <details><summary>경유가 가장 싼 지역은 어디인가요?</summary><p>보통 대구·부산·울산 등 영남권이 낮고 서울·제주가 높은 편입니다. 위 시도별 표에서 가장 싼 지역부터 확인하세요.</p></details>
+    <details><summary>화물차 주유비를 아끼는 방법은?</summary><p>화물복지카드·제휴카드 할인, 셀프주유소 이용, 경제속도 정속주행, 공회전 줄이기, 타이어 공기압 관리가 효과적입니다.</p></details>
+  </div>
 
   <section class="cta">
     <h2>경유값 아끼며 일할 화물기사 모집!</h2>
@@ -98,11 +122,54 @@
   </section>
 
   <p class="src">
-    가격 데이터 출처: 오피넷(한국석유공사) 유가정보 Open API · 매일 자동 업데이트<br>
-    실제 주유 가격은 주유소별로 다를 수 있습니다. 참고용으로 활용하세요.<br>
+    가격 데이터 출처: 한국석유공사 오피넷(Opinet) · 매일 자동 업데이트<br>
+    실제 주유 가격은 주유소·시점별로 다를 수 있습니다. 참고용으로 활용하세요.<br>
     해광 화물운송 · 화물구인구직
   </p>
 </main>
+
+<script>
+// 시도별 경유 평균 (오피넷 기준, 기준일 표시는 fuel-prices.json date)
+var REGIONS=[
+ ["대구",1983.44,-0.16],["부산",1989.39,-0.34],["울산",1992.66,0.16],["대전",1995.13,-0.12],
+ ["광주",1996.07,0.10],["경북",1997.78,-0.32],["경남",1998.80,-0.28],["세종",2001.97,-0.01],
+ ["인천",2002.16,-0.13],["전북",2002.65,0.16],["경기",2003.60,-0.08],["충남",2008.72,-0.29],
+ ["충북",2010.29,-0.08],["전남",2010.87,-0.57],["강원",2012.56,-0.15],["제주",2019.10,-0.16],["서울",2040.78,0.01]
+];
+function won(n){return n.toLocaleString('ko-KR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function diffHtml(d){if(d===0||d==null)return '<span style="color:#94a3b8">–</span>';var up=d>0;return '<span class="d '+(up?'up':'down')+'" style="color:'+(up?'#c0392b':'#1f8a53')+'">'+(up?'▲':'▼')+Math.abs(d).toFixed(2)+'</span>';}
+(function(){
+  REGIONS.sort((a,b)=>a[1]-b[1]);
+  var min=REGIONS[0][1], max=REGIONS[REGIONS.length-1][1], span=max-min||1;
+  var html='';
+  REGIONS.forEach(function(r,i){
+    var rank=i+1, name=r[0], price=r[1], diff=r[2];
+    var w=20+Math.round((price-min)/span*80); // 20~100%
+    var cls=i===0?'cheap':(i===REGIONS.length-1?'high':'');
+    var rk=i===0?'rank t1':(i<3?'rank t2':'rank');
+    var tag=i===0?'<span class="tag c">최저</span>':(i===REGIONS.length-1?'<span class="tag h">최고</span>':'');
+    html+='<div class="row '+cls+'">'
+       +'<div><span class="'+rk+'">'+rank+'</span></div>'
+       +'<div><span class="rg">'+name+'</span>'+tag+'<div class="bar" style="width:'+w+'%"></div></div>'
+       +'<div class="val"><div class="p">'+won(price)+'원</div>'+diffHtml(diff)+'</div>'
+       +'</div>';
+  });
+  document.getElementById('regionRows').innerHTML=html;
+})();
+// 전국 평균 4유종: fuel-prices.json에서 불러와 자동 갱신
+fetch('fuel-prices.json?_='+Date.now()).then(r=>r.json()).then(function(j){
+  var o=j.oil||{};
+  [['diesel','경유'],['gasoline','휘발유'],['premium','고급휘발유'],['lpg','LPG']].forEach(function(k){
+    var d=o[k[0]]; if(!d)return;
+    document.getElementById('p-'+k[0]).innerHTML=won(d.price)+'<small> 원/L</small>';
+    var el=document.getElementById('d-'+k[0]); var df=d.diff||0; var up=df>0;
+    el.className='df '+(up?'up':'down'); el.textContent=(df===0?'– 전일 동일':(up?'▲':'▼')+' '+Math.abs(df).toFixed(2)+'원 (전일 대비)');
+  });
+  var date=(j.date||'').replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3');
+  document.getElementById('meta').textContent='전국 평균 · 기준일 '+(date||j.updated||'')+' · 출처 오피넷(한국석유공사)';
+}).catch(function(){document.getElementById('meta').textContent='전국 평균 · 출처 오피넷(한국석유공사)';});
+</script>
+
 <style>
 .m-callbar{display:none}
 @media(max-width:768px){
