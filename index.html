@@ -253,6 +253,29 @@
   /* ── 오른쪽 사이드바 ── */
   .sidebar { display:flex; flex-direction:column; gap:20px; }
 
+  /* 빠른 상담 카드 (스크롤 따라오는 고정) */
+  .quick-consult { position:sticky; top:80px; z-index:5; background:linear-gradient(135deg,#1a3a8a,#0e2350); border-radius:16px; padding:20px 22px; color:#fff; box-shadow:0 8px 24px rgba(26,58,138,.28); }
+  .quick-consult .qc-title { font-size:15px; font-weight:900; margin-bottom:4px; }
+  .quick-consult .qc-sub { font-size:12.5px; color:#cfe0ff; margin-bottom:14px; line-height:1.5; }
+  .quick-consult .qc-btns { display:flex; flex-direction:column; gap:9px; }
+  .quick-consult a { display:flex; align-items:center; justify-content:center; gap:7px; padding:13px; border-radius:11px; font-weight:800; font-size:15px; text-decoration:none; transition:transform .12s; }
+  .quick-consult a:hover { transform:translateY(-2px); }
+  .qc-call { background:#FFD400; color:#1a237e; }
+  .qc-sms  { background:rgba(255,255,255,.14); color:#fff; border:1.5px solid rgba(255,255,255,.4); }
+  .qc-phone { text-align:center; font-size:18px; font-weight:900; letter-spacing:.5px; margin:10px 0 2px; }
+
+  /* 오늘의 급구 TOP3 */
+  .urgent-card { background:#fff; border-radius:16px; padding:18px 20px; border:1.5px solid #ffe0b2; }
+  .urgent-card .uc-head { display:flex; align-items:center; gap:7px; font-size:15px; font-weight:900; color:#c0392b; margin-bottom:14px; }
+  .urgent-item { display:block; padding:11px 0; border-bottom:1px dashed #eee; text-decoration:none; }
+  .urgent-item:last-child { border-bottom:none; padding-bottom:2px; }
+  .urgent-item .ui-top { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .urgent-item .ui-badge { background:#c0392b; color:#fff; font-size:10px; font-weight:800; padding:2px 6px; border-radius:5px; }
+  .urgent-item .ui-region { font-size:11.5px; color:#888; }
+  .urgent-item .ui-title { font-size:13.5px; font-weight:700; color:#1a237e; line-height:1.35; }
+  .urgent-item .ui-pay { font-size:14px; font-weight:900; color:#1a3a8a; margin-top:3px; }
+  .urgent-item:hover .ui-title { text-decoration:underline; }
+
   /* 해광 회사 카드 */
   .company-card {
     background:linear-gradient(135deg,#1a3a8a,#2563c8);
@@ -1553,6 +1576,37 @@
 
   <!-- ══ 사이드바 ══ -->
   <div class="sidebar">
+
+    <!-- 빠른 상담 (스크롤 따라오는 고정) -->
+    <div class="quick-consult">
+      <div class="qc-title">💬 지금 바로 상담</div>
+      <div class="qc-sub">25~70세 · 초보 · 고령 모두 환영<br>전화·문자 주시면 바로 안내해 드립니다</div>
+      <div class="qc-phone">010-7233-3916</div>
+      <div class="qc-btns">
+        <a class="qc-call" href="tel:01072333916">📞 전화 상담</a>
+        <a class="qc-sms" href="sms:01072333916">✉️ 문자 남기기</a>
+      </div>
+    </div>
+
+    <!-- 오늘의 급구 TOP3 -->
+    <div class="urgent-card">
+      <div class="uc-head">🔥 오늘의 급구 TOP3</div>
+      <a class="urgent-item" href="#jobs">
+        <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 전국</span></div>
+        <div class="ui-title">25톤 화물기사 모집</div>
+        <div class="ui-pay">월 600만원</div>
+      </a>
+      <a class="urgent-item" href="#jobs">
+        <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 서울/경기</span></div>
+        <div class="ui-title">5톤 윙바디 화물기사</div>
+        <div class="ui-pay">월 450~600만원</div>
+      </a>
+      <a class="urgent-item" href="#jobs">
+        <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 경기/인천</span></div>
+        <div class="ui-title">11톤 장거리 기사 (정규직)</div>
+        <div class="ui-pay">월 450만원</div>
+      </a>
+    </div>
 
     <!-- 해광 회사 카드 -->
     <div class="company-card" id="company">
