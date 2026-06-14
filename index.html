@@ -271,6 +271,7 @@
   .urgent-item:last-child { border-bottom:none; padding-bottom:2px; }
   .urgent-item .ui-top { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
   .urgent-item .ui-badge { background:#c0392b; color:#fff; font-size:10px; font-weight:800; padding:2px 6px; border-radius:5px; }
+  .urgent-item .ui-badge.ui-badge-new { background:#1a3a8a; }
   .urgent-item .ui-region { font-size:11.5px; color:#888; }
   .urgent-item .ui-title { font-size:13.5px; font-weight:700; color:#1a237e; line-height:1.35; }
   .urgent-item .ui-pay { font-size:14px; font-weight:900; color:#1a3a8a; margin-top:3px; }
@@ -1591,21 +1592,23 @@
     <!-- 오늘의 급구 TOP3 -->
     <div class="urgent-card">
       <div class="uc-head">🔥 오늘의 급구 TOP3</div>
-      <a class="urgent-item" href="#jobs">
-        <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 전국</span></div>
-        <div class="ui-title">25톤 화물기사 모집</div>
-        <div class="ui-pay">월 600만원</div>
-      </a>
-      <a class="urgent-item" href="#jobs">
-        <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 서울/경기</span></div>
-        <div class="ui-title">5톤 윙바디 화물기사</div>
-        <div class="ui-pay">월 450~600만원</div>
-      </a>
-      <a class="urgent-item" href="#jobs">
-        <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 경기/인천</span></div>
-        <div class="ui-title">11톤 장거리 기사 (정규직)</div>
-        <div class="ui-pay">월 450만원</div>
-      </a>
+      <div id="urgentList"><!-- 공고에서 자동 생성 (JS: renderUrgentTop3) -->
+        <a class="urgent-item" href="#jobs">
+          <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 전국</span></div>
+          <div class="ui-title">25톤 화물기사 모집</div>
+          <div class="ui-pay">월 600만원</div>
+        </a>
+        <a class="urgent-item" href="#jobs">
+          <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 서울/경기</span></div>
+          <div class="ui-title">5톤 윙바디 화물기사</div>
+          <div class="ui-pay">월 450~600만원</div>
+        </a>
+        <a class="urgent-item" href="#jobs">
+          <div class="ui-top"><span class="ui-badge">급구</span><span class="ui-region">📍 경기/인천</span></div>
+          <div class="ui-title">11톤 장거리 기사 (정규직)</div>
+          <div class="ui-pay">월 450만원</div>
+        </a>
+      </div>
     </div>
 
     <!-- 해광 회사 카드 -->
@@ -2667,6 +2670,34 @@
         });
       });
     });
+    renderUrgentTop3();
+  }
+
+  /* 오늘의 급구 TOP3 자동 생성 — 공고에서 급구 우선, 부족하면 최신순 보충 */
+  function renderUrgentTop3(){
+    var box = document.getElementById('urgentList');
+    if(!box) return;
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.job-list .job-card'));
+    if(!cards.length) return;
+    var urgent = cards.filter(function(c){ return c.querySelector('.badge-urgent'); });
+    var rest   = cards.filter(function(c){ return !c.querySelector('.badge-urgent'); });
+    var pick = urgent.concat(rest).slice(0, 3);
+    if(!pick.length) return;
+    box.innerHTML = pick.map(function(c){
+      var isUrgent = !!c.querySelector('.badge-urgent');
+      var region = c.dataset.region || (((c.querySelector('.badge-region')||{}).textContent)||'').replace('📍','').trim() || '전국';
+      var pay = (((c.querySelector('.job-salary .amount')||{}).textContent)||'').trim() || '협의';
+      var raw = (((c.querySelector('.job-title')||{}).textContent)||'').trim();
+      var title = raw.replace(/\[[^\]]*\]/g,'').replace(/\([^)]*\)/g,'').trim();
+      if(!title) title = (c.dataset.type||'') + ' 화물기사';
+      if(title.length > 22) title = title.slice(0,22) + '…';
+      var badge = isUrgent ? '<span class="ui-badge">급구</span>'
+                           : '<span class="ui-badge ui-badge-new">NEW</span>';
+      return '<a class="urgent-item" href="#jobs">'
+        + '<div class="ui-top">' + badge + '<span class="ui-region">📍 ' + region + '</span></div>'
+        + '<div class="ui-title">' + title + '</div>'
+        + '<div class="ui-pay">' + pay + '</div></a>';
+    }).join('');
   }
 
   /* ════════════════════════════════════════
@@ -3077,6 +3108,7 @@
     wireJobCards();
     wireUiControls();
     renderJobPage(1);
+    renderUrgentTop3();
   });
 </script>
 <style>
