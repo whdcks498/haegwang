@@ -611,5 +611,19 @@ function exportJson(){
 window.addEventListener('hashchange',router);
 (async function(){ await loadData(); router(); })();
 </script>
+<style>
+.m-callbar{display:none}
+@media(max-width:768px){
+  .m-callbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:99999;box-shadow:0 -2px 10px rgba(0,0,0,.18)}
+  .m-callbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:14px 0;font-size:16px;font-weight:800;text-decoration:none;letter-spacing:-.3px}
+  .m-callbar .mc-call{background:#15326f;color:#fff}
+  .m-callbar .mc-resume{background:#ffd400;color:#15326f}
+  body{padding-bottom:56px}
+}
+</style>
+<div class="m-callbar">
+  <a class="mc-call" href="tel:01072333916">📞 전화 문의</a>
+  <a class="mc-resume" href="https://forms.gle/GNssyaq362VDPsbT8" target="_blank" rel="noopener">📝 이력서 등록</a>
+</div>
 </body>
 </html>
