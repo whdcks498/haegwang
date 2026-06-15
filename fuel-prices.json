@@ -1,23 +1,23 @@
 {
-  "date": "20260615",
+  "date": "20260616",
   "updated": "2026-06-15",
   "source": "한국석유공사 오피넷",
   "oil": {
-    "diesel": {
-      "price": 2004.28,
-      "diff": 0.06
+    "premium": {
+      "price": 2418.14,
+      "diff": -23.2
     },
     "gasoline": {
-      "price": 2009.58,
-      "diff": 0.02
+      "price": 2009.42,
+      "diff": -0.01
     },
-    "premium": {
-      "price": 2441.67,
-      "diff": 0.15
+    "diesel": {
+      "price": 2004.23,
+      "diff": -0.12
     },
     "lpg": {
-      "price": 1107.71,
-      "diff": -0.02
+      "price": 1107.74,
+      "diff": 0
     }
   },
   "sido": [
