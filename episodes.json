@@ -1,6 +1,6 @@
 {
   "site": "해광툰",
-  "updated": "2026-06-14",
+  "updated": "2026-06-15",
   "series": [
     {
       "id": "jongchan",
@@ -148,6 +148,106 @@
             },
             {
               "img": "toon/2/20.jpg"
+            }
+          ]
+        },
+        {
+          "no": 3,
+          "title": "악연, 그리고 스승",
+          "date": "2026-06-15",
+          "likes": 0,
+          "thumb": "<img src='toon/3/01.jpg' style='width:100%;height:100%;object-fit:cover;display:block'>",
+          "thumbBg": "#0b1733",
+          "panels": [
+            {
+              "img": "toon/3/01.jpg"
+            },
+            {
+              "img": "toon/3/02.jpg"
+            },
+            {
+              "img": "toon/3/03.jpg"
+            },
+            {
+              "img": "toon/3/04.jpg"
+            },
+            {
+              "img": "toon/3/05.jpg"
+            },
+            {
+              "img": "toon/3/06.jpg"
+            },
+            {
+              "img": "toon/3/07.jpg"
+            },
+            {
+              "img": "toon/3/08.jpg"
+            },
+            {
+              "img": "toon/3/09.jpg"
+            },
+            {
+              "img": "toon/3/10.jpg"
+            },
+            {
+              "img": "toon/3/11.jpg"
+            },
+            {
+              "img": "toon/3/12.jpg"
+            },
+            {
+              "img": "toon/3/13.jpg"
+            },
+            {
+              "img": "toon/3/14.jpg"
+            },
+            {
+              "img": "toon/3/15.jpg"
+            },
+            {
+              "img": "toon/3/16.jpg"
+            },
+            {
+              "img": "toon/3/17.jpg"
+            },
+            {
+              "img": "toon/3/18.jpg"
+            },
+            {
+              "img": "toon/3/19.jpg"
+            },
+            {
+              "img": "toon/3/20.jpg"
+            },
+            {
+              "img": "toon/3/21.jpg"
+            },
+            {
+              "img": "toon/3/22.jpg"
+            },
+            {
+              "img": "toon/3/23.jpg"
+            },
+            {
+              "img": "toon/3/24.jpg"
+            },
+            {
+              "img": "toon/3/25.jpg"
+            },
+            {
+              "img": "toon/3/26.jpg"
+            },
+            {
+              "img": "toon/3/27.jpg"
+            },
+            {
+              "img": "toon/3/28.jpg"
+            },
+            {
+              "img": "toon/3/29.jpg"
+            },
+            {
+              "img": "toon/3/30.jpg"
             }
           ]
         }
