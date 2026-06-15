@@ -2,15 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://whdcks498.github.io/haegwang/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://whdcks498.github.io/haegwang/%ED%99%94%EB%AC%BC%EA%B5%AC%EC%9D%B8%EA%B5%AC%EC%A7%81.html</loc>
-    <lastmod>2026-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
 
   <!-- 지역별 화물기사 채용 랜딩 -->
@@ -94,7 +88,7 @@
   </url>
   <url>
     <loc>https://whdcks498.github.io/haegwang/news.html</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
