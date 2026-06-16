@@ -2802,6 +2802,7 @@
     card.className = 'job-card';
     card.dataset.jid = 'a' + job.ts;
     card.dataset.admin = '1';
+    if(job.id) card.dataset.docid = job.id;   /* Firestore 문서 ID (수정·삭제 시 클라우드 반영용) */
     if(job.type)   card.dataset.type = (String(job.type).match(/[0-9]+(?:\.[0-9]+)?톤/)||[job.type])[0];
     if(job.region) card.dataset.region = job.region;
     if(job.image) card.dataset.image = job.image;
@@ -2843,7 +2844,12 @@
       const d = { company, title, type, region, salary, desc };
       const card = document.querySelector('.job-list .job-card[data-jid="' + editingJid + '"]');
       if(card) applyCardData(card, d);
-      if(editingJid[0] === 'a'){
+      const docid = card ? card.dataset.docid : '';
+      if(docid && window.db){
+        /* 클라우드(Firestore) 수정 → onSnapshot이 모든 기기·방문자에 자동 반영 */
+        db.collection('jobs').doc(docid).update(d)
+          .catch(function(e){ alert('수정의 클라우드 반영 중 오류가 발생했습니다: ' + e.message); });
+      } else if(editingJid[0] === 'a'){
         const ts = editingJid.slice(1);
         const jobs = loadAdminJobs().map(j=>String(j.ts)===String(ts) ? Object.assign({}, j, d, {image: currentJobImage || j.image}) : j);
         try{ localStorage.setItem(JOBS_KEY, JSON.stringify(jobs)); }catch(e){}
@@ -3156,15 +3162,17 @@
   }
 
   function deleteJob(card){
-    if(!confirm('이 공고를 삭제할까요?\n(이 브라우저에서 숨겨집니다. 모든 방문자에게 영구 반영하려면 GitHub 저장이 필요합니다.)')) return;
-    const jid = card.dataset.jid;
-    if(jid && jid[0]==='a'){
-      const ts = jid.slice(1);
-      const jobs = loadAdminJobs().filter(j=>String(j.ts)!==String(ts));
-      try{ localStorage.setItem(JOBS_KEY, JSON.stringify(jobs)); }catch(e){}
-    } else {
-      const del = loadDeleted(); if(!del.includes(jid)){ del.push(jid); saveDeleted(del); }
+    const docid = card.dataset.docid;
+    if(docid && window.db){
+      if(!confirm('이 공고를 삭제할까요?\n(모든 방문자에게서 영구 삭제됩니다.)')) return;
+      db.collection('jobs').doc(docid).delete()
+        .then(function(){ showSuccess('🗑️','삭제 완료','공고가 모든 방문자에게서 삭제되었습니다.'); })
+        .catch(function(e){ alert('삭제의 클라우드 반영 중 오류가 발생했습니다: ' + e.message); });
+      return;  /* onSnapshot이 모든 기기에서 카드를 자동 제거 */
     }
+    if(!confirm('이 공고를 삭제할까요?\n(정적 공고는 이 브라우저에서 숨겨지며, 영구 반영은 코드 수정이 필요합니다.)')) return;
+    const jid = card.dataset.jid;
+    const del = loadDeleted(); if(!del.includes(jid)){ del.push(jid); saveDeleted(del); }
     card.remove();
     updateCount(document.querySelectorAll('.job-list .job-card').length);
     showSuccess('🗑️','삭제 완료','공고가 삭제되었습니다.');
