@@ -896,6 +896,43 @@
 })();
 </script>
 
+<!-- ══════════ 콘텐츠 바로가기 배너 (해광툰 · 모의시험) ══════════ -->
+<style>
+  .feature-banner{max-width:1100px;margin:30px auto 6px;padding:0 16px;}
+  .feature-banner .fb-head{font-size:19px;font-weight:900;color:#1a237e;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+  .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:680px){.feature-grid{grid-template-columns:1fr}}
+  .feat-card{position:relative;border-radius:18px;padding:22px 22px 20px;color:#fff;overflow:hidden;text-decoration:none;display:block;box-shadow:0 8px 24px rgba(21,50,111,.16);transition:transform .18s, box-shadow .18s}
+  .feat-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(21,50,111,.26)}
+  .feat-toon{background:linear-gradient(135deg,#5b3df5,#8b5cf6 55%,#c026d3)}
+  .feat-exam{background:linear-gradient(135deg,#0f5132,#1f8a53 55%,#10b981)}
+  .feat-card .fc-emoji{font-size:34px;line-height:1}
+  .feat-card .fc-badge{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.22);backdrop-filter:blur(2px);font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:20px}
+  .feat-card h3{font-size:19px;font-weight:900;margin:12px 0 6px}
+  .feat-card p{font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.92);margin-bottom:14px}
+  .feat-card .fc-go{display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1a237e;font-weight:800;font-size:13.5px;padding:9px 16px;border-radius:10px}
+  .feat-exam .fc-go{color:#0f5132}
+</style>
+<section class="feature-banner" aria-label="해광툰·자격증 모의시험 바로가기">
+  <div class="fb-head">✨ 화물기사라면 꼭! 무료 콘텐츠</div>
+  <div class="feature-grid">
+    <a class="feat-card feat-toon" href="haegwangtoon.html">
+      <span class="fc-badge">🎬 무료 웹툰</span>
+      <div class="fc-emoji">🎨</div>
+      <h3>해광툰 — 해광그룹 막내아들</h3>
+      <p>재벌가 막내가 1톤 트럭으로 다시 일어서는 화물판 인생극! 웃기고 뭉클한 화물기사 이야기, 매주 새 회차.</p>
+      <span class="fc-go">웹툰 보러가기 →</span>
+    </a>
+    <a class="feat-card feat-exam" href="license-exam.html">
+      <span class="fc-badge">📝 무료 · 회원가입 시 기록저장</span>
+      <div class="fc-emoji">🎯</div>
+      <h3>화물운송 자격증 모의시험</h3>
+      <p>실전 80문항·80분 모의고사 + 과목별 연습. 자동 채점과 합격(60%) 시뮬레이션, 오답노트 해설까지 무료로!</p>
+      <span class="fc-go">지금 응시하기 →</span>
+    </a>
+  </div>
+</section>
+
 <!-- ══════════ 차종 카테고리 ══════════ -->
 <div class="category-section">
   <div class="section-title">차종별 채용공고</div>

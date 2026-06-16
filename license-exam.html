@@ -11,9 +11,9 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>화물운송종사 자격증 모의시험 (회원 전용) | 합격 시뮬레이션 - 해광 화물운송</title>
-<meta name="description" content="화물운송종사 자격시험 무료 모의고사. 실전 80문항·80분 타이머, 과목별 연습, 자동 채점과 합격(60%) 시뮬레이션, 오답노트 해설 제공. 해광 화물운송 회원 전용 학습 서비스.">
-<meta name="keywords" content="화물운송종사자격증 모의시험, 화물운송 자격증 기출, 화물운송종사 자격시험, 화물기사 자격증, 모의고사, 합격 시뮬레이션, 해광 화물운송">
+<title>화물운송종사 자격증 모의시험 (무료) | 화물종사자 모의고사·합격 시뮬레이션 - 해광 화물운송</title>
+<meta name="description" content="화물운송종사 자격시험 무료 모의고사. 화물종사자 모의시험을 온라인에서 바로! 실전 80문항·80분 타이머, 과목별 연습, 자동 채점과 합격(60%) 시뮬레이션, 오답노트 해설까지 누구나 무료. 화물기사 자격증 준비는 해광 화물운송.">
+<meta name="keywords" content="화물종사자 모의시험, 화물운송종사자격증 모의시험, 화물운송 자격증 모의고사, 화물운송종사 자격시험, 화물기사 자격증 시험, 화물자격증 문제, 모의고사, 합격 시뮬레이션, 화물운송종사자격증 기출, 해광 화물운송">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://whdcks498.github.io/haegwang/license-exam.html">
 <meta property="og:type" content="website">
@@ -25,6 +25,12 @@
 <meta property="og:image" content="https://whdcks498.github.io/haegwang/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://whdcks498.github.io/haegwang/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://whdcks498.github.io/haegwang/"},{"@type":"ListItem","position":2,"name":"화물운송종사 자격증 모의시험","item":"https://whdcks498.github.io/haegwang/license-exam.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"화물운송종사 자격시험은 어떻게 구성되나요?","acceptedAnswer":{"@type":"Answer","text":"교통 및 화물 관련 법규, 화물 취급요령, 안전운행, 운송서비스 4과목 총 80문항으로 구성되며, 컴퓨터 시험(CBT)으로 80분 동안 진행됩니다."}},
+{"@type":"Question","name":"화물운송종사 자격시험 합격 기준은 무엇인가요?","acceptedAnswer":{"@type":"Answer","text":"총 80문항 중 60% 이상, 즉 48문항 이상을 맞히면 합격입니다."}},
+{"@type":"Question","name":"화물종사자 모의시험을 무료로 볼 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"네. 해광 화물운송 홈페이지에서 누구나 무료로 화물운송종사 자격증 모의시험(실전 80문항·과목별 연습)을 응시하고 자동 채점·오답노트 해설을 받을 수 있습니다."}}
+]}</script>
 <style>
 :root{--navy:#15326f;--navy2:#0f2552;--gold:#ffd400;--ink:#1e2330;--mute:#64748b;--bg:#f4f6fb;--line:#e3e8f2;--green:#1f8a53;--red:#c0392b;}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -104,7 +110,7 @@ a{color:var(--navy);text-decoration:none}
   <!-- 모드 선택 -->
   <section id="home" class="hidden">
     <div class="card">
-      <div style="font-size:14px;color:var(--mute)">👋 <b id="userName">회원</b>님, 환영합니다. 시험 방식을 선택하세요.</div>
+      <div id="greet" style="font-size:14px;color:var(--mute)">👋 <b id="userName">회원</b>님, 환영합니다. 시험 방식을 선택하세요.</div>
     </div>
     <div class="modes">
       <div class="mode" onclick="startExam('real')">
@@ -174,9 +180,12 @@ function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.rand
 
 async function init(){
   const user=getUser();
-  if(!user){ document.getElementById('gate').classList.remove('hidden'); return; }
   document.getElementById('home').classList.remove('hidden');
-  document.getElementById('userName').textContent = user.name || '회원';
+  if(user){
+    document.getElementById('userName').textContent = user.name || '회원';
+  } else {
+    document.getElementById('greet').innerHTML = '🎯 누구나 <b>무료</b>로 모의시험을 풀어볼 수 있어요! <a href="https://whdcks498.github.io/haegwang/" style="color:#15326f;font-weight:800">회원가입</a>하면 다음에도 편하게 이용할 수 있습니다.';
+  }
   try{
     const r=await fetch('license_questions.json?_='+Date.now());
     BANK=await r.json();
