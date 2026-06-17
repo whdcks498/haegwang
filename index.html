@@ -3023,12 +3023,12 @@
       card.dataset.matched = ok ? '1' : '0';
       if(ok) shown++;
     });
-    renderJobPage(1);
+    renderJobPage(1); injectJobPostingLD();
     scrollToJobs();
   }
   function resetJobFilter(){
     document.querySelectorAll('.job-list .job-card').forEach(c=>{ c.dataset.matched='1'; });
-    renderJobPage(1);
+    renderJobPage(1); injectJobPostingLD();
   }
 
   function wireUiControls(){
@@ -3108,6 +3108,41 @@
       salary:  (card.querySelector('.job-salary .amount')||{}).textContent || '',
       desc:    card.dataset.desc || ((card.querySelector('.job-desc')||{}).textContent||'').trim()
     };
+  }
+
+  /* ── 각 채용공고 → JobPosting 구조화데이터(JSON-LD) 자동 생성 → 구글 채용(Google for Jobs) 노출 ── */
+  function injectJobPostingLD(){
+    try{
+      document.querySelectorAll('script[data-jobld]').forEach(function(s){ s.remove(); });
+      var today = new Date().toISOString().slice(0,10);
+      var valid = new Date(Date.now()+90*864e5).toISOString().slice(0,10);
+      document.querySelectorAll('.job-list .job-card').forEach(function(card){
+        var d = readCardData(card);
+        if(!d.title) return;
+        var region = (d.region||'전국').split('/')[0].replace(/전국/,'').trim() || '서울특별시';
+        var cleanTitle = d.title.replace(/\[[^\]]*\]/g,'').trim() || d.title;
+        var desc = (d.desc && d.desc.length>20) ? d.desc
+          : (cleanTitle + ' — ' + (d.company||'해광 화물운송') + ' 화물기사 모집. ' + (d.type||'') + ' ' + (d.region||'전국') + ' 운행, 초보·고령(70세) 환영, 상시모집. 문의 010-7233-3916.');
+        var ld = {
+          "@context":"https://schema.org/","@type":"JobPosting",
+          "title": cleanTitle,
+          "description": desc,
+          "datePosted": today,
+          "validThrough": valid,
+          "employmentType": "FULL_TIME",
+          "industry": "화물운송·물류",
+          "hiringOrganization": {"@type":"Organization","name": d.company || "해광 화물운송","telephone":"010-7233-3916","sameAs":"https://whdcks498.github.io/haegwang/"},
+          "jobLocation": {"@type":"Place","address":{"@type":"PostalAddress","addressLocality": region,"addressRegion": region,"addressCountry":"KR"}},
+          "identifier": {"@type":"PropertyValue","name": d.company || "해광 화물운송","value": (card.dataset.docid || card.dataset.jid || cleanTitle)},
+          "directApply": true
+        };
+        var sc = document.createElement('script');
+        sc.type = 'application/ld+json';
+        sc.setAttribute('data-jobld','1');
+        sc.textContent = JSON.stringify(ld);
+        document.head.appendChild(sc);
+      });
+    }catch(e){}
   }
 
   function applyCardData(card, d){
@@ -3229,7 +3264,7 @@
         snap.forEach(function(doc){ var j = doc.data(); j.id = doc.id; renderAdminJob(j, true); });
         assignJobIds(); applyAdminChanges(); wireJobCards();
         if(typeof isAdmin !== 'undefined' && isAdmin) renderAdminControls();
-        renderJobPage(1); renderUrgentTop3();
+        renderJobPage(1); injectJobPostingLD(); renderUrgentTop3();
       }, function(err){ console.error('공고 클라우드 로드 오류:', err); });
     } else {
       /* 폴백(오프라인): 로컬 공고 복원 */
@@ -3241,7 +3276,7 @@
     /* 카드 / UI 컨트롤 연결 */
     wireJobCards();
     wireUiControls();
-    renderJobPage(1);
+    renderJobPage(1); injectJobPostingLD();
     renderUrgentTop3();
   });
 </script>
