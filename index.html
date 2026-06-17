@@ -631,6 +631,7 @@
         <div class="nav-drop-menu">
           <a href="guide.html">취업정보</a>
           <a href="license-exam.html">📝 자격증 모의시험</a>
+          <a href="board.html">💬 1:1 문의</a>
           <a href="news.html">뉴스</a>
           <a href="haegwangtoon.html">해광툰</a>
           <a href="diesel-price.html">투데이 유류정보</a>
@@ -660,6 +661,7 @@
     <a href="#about"   onclick="closeMobileNavAll()">ℹ️ 회사소개</a>
     <a href="guide.html">📖 취업정보</a>
     <a href="license-exam.html">📝 자격증 모의시험</a>
+    <a href="board.html">💬 1:1 문의</a>
     <a href="news.html">📰 뉴스</a><a href="haegwangtoon.html">🎨 해광툰</a><a href="diesel-price.html">⛽ 투데이 유류정보</a>
     <a href="tel:01072333916" style="color:#FF3B30;">📞 010-7233-3916</a>
     <div class="m-btn-wrap">
@@ -2277,6 +2279,7 @@
     catch(e){ errEl.style.display='block'; return; }
     if(ares && ares.ok && id === ADMIN_ID){
       isAdmin = true; adminKey = ares._h;
+      try{ sessionStorage.setItem('haegwang_admin', ares._h); }catch(e){}
       document.getElementById('adminId').value = '';
       document.getElementById('adminPw').value = '';
       errEl.style.display = 'none';
@@ -2330,6 +2333,7 @@
       catch(e){ alert('서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.'); return; }
       if(ares && ares.ok){
         isAdmin = true; adminKey = ah;
+        try{ sessionStorage.setItem('haegwang_admin', ah); }catch(e){}
         closeModal('modalLogin');
         showAdminBar();
         showSuccess('🔐','관리자 로그인 성공!','박종찬 관리자님, 환영합니다!\n관리자 메뉴가 활성화되었습니다.');
@@ -2357,7 +2361,7 @@
       alert('아이디 또는 비밀번호가 일치하지 않습니다.\n아직 회원이 아니시면 먼저 회원가입을 해주세요.');
       return;
     }
-    currentUser = { id:id, type:res.type, status:res.status, name:res.name, email:res.email, company:res.company };
+    currentUser = { id:id, type:res.type, status:res.status, name:res.name, email:res.email, company:res.company, h:h };
     try{ sessionStorage.setItem('haegwang_user', JSON.stringify(currentUser)); }catch(e){}
     document.getElementById('loginPw').value = '';
     closeModal('modalLogin');
@@ -2436,6 +2440,7 @@
 
   function doLogout(){
     isAdmin = false;
+    try{ sessionStorage.removeItem('haegwang_admin'); }catch(e){}
     removeAdminControls();
     document.getElementById('adminBar').style.display = 'none';
     document.querySelector('.btn-login').textContent = '로그인';

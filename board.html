@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1:1 문의 · 해광 화물운송 화물구인구직</title>
+<meta name="description" content="해광 화물운송 회원 전용 1:1 비공개 문의 게시판. 본인과 관리자만 볼 수 있는 안전한 소통 공간입니다.">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="dns-prefetch" href="https://script.google.com">
+<link rel="preconnect" href="https://script.google.com">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SGNM9VX949"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-SGNM9VX949');
+</script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Malgun Gothic','맑은 고딕',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f6fb;color:#222;line-height:1.6;-webkit-text-size-adjust:100%}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:840px;margin:0 auto;padding:0 16px}
+
+  /* 헤더 */
+  header{background:#1a3a8a;color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  header .wrap{display:flex;align-items:center;justify-content:space-between}
+  .logo{font-size:18px;font-weight:800;letter-spacing:-.5px}
+  .logo small{display:block;font-size:11px;font-weight:400;opacity:.85;letter-spacing:0}
+  .home-link{font-size:13px;background:rgba(255,255,255,.16);padding:8px 14px;border-radius:8px;font-weight:600}
+  .home-link:active{background:rgba(255,255,255,.28)}
+
+  /* 히어로 */
+  .hero{background:linear-gradient(135deg,#1a3a8a,#2b56c4);color:#fff;padding:30px 0 26px;text-align:center}
+  .hero h1{font-size:24px;font-weight:800;margin-bottom:8px}
+  .hero p{font-size:14px;opacity:.92}
+  .badge-private{display:inline-block;margin-top:12px;background:rgba(255,255,255,.18);padding:6px 14px;border-radius:20px;font-size:12.5px;font-weight:600}
+
+  main{padding:24px 0 60px}
+  .card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);padding:22px;margin-bottom:18px}
+  .card h2{font-size:17px;font-weight:800;color:#1a3a8a;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+
+  /* 폼 */
+  label{display:block;font-size:13px;font-weight:700;color:#444;margin:12px 0 5px}
+  input[type=text],input[type=password],textarea,select{width:100%;padding:12px 13px;border:1.5px solid #d6dbe8;border-radius:9px;font-size:15px;font-family:inherit;background:#fff;transition:border-color .15s}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:#1a3a8a}
+  textarea{resize:vertical;min-height:120px}
+  .btn{display:inline-block;background:#1a3a8a;color:#fff;border:none;border-radius:9px;padding:13px 22px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+  .btn:hover{background:#142e6e}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .btn-full{width:100%}
+  .btn-sub{background:#e7ebf5;color:#1a3a8a}
+  .btn-sub:hover{background:#d7deef}
+  .btn-danger{background:#fbe9e9;color:#c0392b}
+  .btn-danger:hover{background:#f5d6d6}
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .hint{font-size:12.5px;color:#8a90a0;margin-top:6px}
+
+  /* 안내문 */
+  .notice{background:#eef3ff;border:1px solid #d3e0ff;border-radius:10px;padding:14px 16px;font-size:13.5px;color:#2a3f6e;margin-bottom:18px}
+  .notice b{color:#1a3a8a}
+
+  /* 문의 카드 */
+  .q-item{border:1px solid #e6e9f2;border-radius:12px;padding:16px;margin-bottom:14px;background:#fcfdff}
+  .q-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .q-title{font-size:15.5px;font-weight:700;color:#1f2640;flex:1;word-break:break-word}
+  .q-meta{font-size:12px;color:#9098ad;margin-top:3px;font-weight:400}
+  .q-status{flex-shrink:0;font-size:12px;font-weight:700;padding:4px 10px;border-radius:14px;white-space:nowrap}
+  .st-접수{background:#fff3d6;color:#a9791a}
+  .st-답변완료{background:#dcf3e4;color:#1f8a4c}
+  .q-body{font-size:14px;color:#3a4055;white-space:pre-wrap;word-break:break-word;padding:10px 0;border-top:1px dashed #e6e9f2;margin-top:8px}
+  .q-reply{background:#f0f6ff;border-left:3px solid #1a3a8a;border-radius:0 8px 8px 0;padding:12px 14px;margin-top:10px}
+  .q-reply .lbl{font-size:12px;font-weight:700;color:#1a3a8a;margin-bottom:5px}
+  .q-reply .txt{font-size:14px;color:#28324d;white-space:pre-wrap;word-break:break-word}
+  .q-author{font-size:12.5px;color:#5566aa;font-weight:600;margin-bottom:4px}
+  .reply-box{margin-top:10px}
+  .empty{text-align:center;color:#98a0b3;padding:34px 10px;font-size:14px}
+  .spin{text-align:center;color:#1a3a8a;padding:24px;font-size:14px}
+  .seg{display:flex;gap:8px;margin-bottom:16px}
+  .seg button{flex:1;padding:10px;border:1.5px solid #d6dbe8;background:#fff;border-radius:9px;font-weight:700;font-size:14px;color:#667;cursor:pointer;font-family:inherit}
+  .seg button.on{background:#1a3a8a;color:#fff;border-color:#1a3a8a}
+  .who{font-size:13px;color:#555;margin-bottom:14px}
+  .who b{color:#1a3a8a}
+  .who a{color:#c0392b;font-weight:700;margin-left:8px}
+  footer{text-align:center;padding:26px 0;color:#9098ad;font-size:12px}
+  @media(max-width:520px){.hero h1{font-size:20px}.card{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html">해광 화물운송<small>화물구인구직 · 1:1 문의</small></a>
+    <a class="home-link" href="index.html">← 홈으로</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>💬 1:1 문의</h1>
+    <p>궁금하신 점·요청사항을 남겨주세요. 관리자가 직접 답변드립니다.</p>
+    <span class="badge-private">🔒 작성자 본인과 관리자만 볼 수 있는 비공개 게시판</span>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- 로그인 안내(미로그인) -->
+  <div id="loginView" style="display:none">
+    <div class="card">
+      <h2>🔑 로그인이 필요합니다</h2>
+      <div class="notice">1:1 문의는 <b>회원 전용</b>입니다. 작성한 글은 <b>본인과 관리자만</b> 볼 수 있습니다.<br>아이디·비밀번호로 로그인해 주세요. (관리자도 이곳에서 로그인)</div>
+      <label>아이디</label>
+      <input type="text" id="loginId" placeholder="아이디" autocomplete="username">
+      <label>비밀번호</label>
+      <input type="password" id="loginPw" placeholder="비밀번호" autocomplete="current-password">
+      <div class="btn-row">
+        <button class="btn btn-full" id="loginBtn" onclick="doLogin()">로그인</button>
+      </div>
+      <p class="hint">아직 회원이 아니신가요? <a href="index.html" style="color:#1a3a8a;font-weight:700">홈에서 회원가입 →</a></p>
+    </div>
+  </div>
+
+  <!-- 회원 뷰 -->
+  <div id="memberView" style="display:none">
+    <div class="who">👤 <b id="meName">회원</b>님으로 로그인됨 <a href="#" onclick="logout();return false;">로그아웃</a></div>
+
+    <div class="card">
+      <h2>✏️ 새 문의 작성</h2>
+      <label>제목</label>
+      <input type="text" id="qTitle" maxlength="100" placeholder="문의 제목 (최대 100자)">
+      <label>내용</label>
+      <textarea id="qContent" maxlength="4000" placeholder="문의 내용을 입력해 주세요. (최대 4000자)"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-full" id="submitBtn" onclick="submitInquiry()">문의 등록</button>
+      </div>
+      <p class="hint">🔒 등록한 문의는 대표님(관리자)과 본인만 볼 수 있습니다.</p>
+    </div>
+
+    <div class="card">
+      <h2>📋 내 문의 내역</h2>
+      <div id="myList"><div class="spin">불러오는 중…</div></div>
+    </div>
+  </div>
+
+  <!-- 관리자 뷰 -->
+  <div id="adminView" style="display:none">
+    <div class="who">🔐 <b>관리자</b>로 로그인됨 <a href="#" onclick="logout();return false;">로그아웃</a></div>
+    <div class="card">
+      <h2>📬 전체 문의 (관리자)</h2>
+      <div id="adminList"><div class="spin">불러오는 중…</div></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>해광 화물운송 · 화물구인구직 &nbsp;|&nbsp; ☎ 010-7233-3916</footer>
+
+<script>
+  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwXgo6OHo7zbW2chGv5eW2JsphWjMTV4hNq4iaJfVyS2SdbgKnc3SSPVr555kqkP_zy/exec';
+  const ADMIN_ID = 'pjc3916';
+
+  async function sha256Hex(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  function backendJsonp(params){
+    return new Promise(function(resolve,reject){
+      var cb = '__hg'+Date.now()+Math.floor(Math.random()*10000);
+      var s = document.createElement('script');
+      var q = Object.keys(params).map(k=>encodeURIComponent(k)+'='+encodeURIComponent(params[k])).join('&');
+      window[cb] = function(data){ resolve(data); try{delete window[cb];}catch(e){} s.remove(); };
+      s.onerror = function(){ try{delete window[cb];}catch(e){} s.remove(); reject(new Error('net')); };
+      s.src = SHEET_WEBAPP_URL + '?' + q + '&callback=' + cb;
+      document.body.appendChild(s);
+      setTimeout(function(){ if(window[cb]){ try{delete window[cb];}catch(e){} s.remove(); reject(new Error('timeout')); } }, 13000);
+    });
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function fmtDate(v){
+    if(!v) return '';
+    var d = new Date(v); if(isNaN(d)) return String(v).slice(0,16).replace('T',' ');
+    var p=function(n){return n<10?'0'+n:n;};
+    return d.getFullYear()+'.'+p(d.getMonth()+1)+'.'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+  }
+
+  /* 세션 상태 */
+  var me = null;        // 회원 {id, name, h, ...}
+  var adminKey = null;  // 관리자 해시
+
+  function show(view){
+    document.getElementById('loginView').style.display  = view==='login'  ? 'block':'none';
+    document.getElementById('memberView').style.display = view==='member' ? 'block':'none';
+    document.getElementById('adminView').style.display  = view==='admin'  ? 'block':'none';
+  }
+
+  /* 초기화: index에서 넘어온 세션 자동 인식 */
+  function init(){
+    try{
+      var ad = sessionStorage.getItem('haegwang_admin');
+      if(ad){ adminKey = ad; show('admin'); loadAll(); return; }
+    }catch(e){}
+    try{
+      var su = sessionStorage.getItem('haegwang_user');
+      if(su){
+        var u = JSON.parse(su);
+        if(u && u.id && u.h){ me = u; document.getElementById('meName').textContent = u.name || u.id; show('member'); loadMine(); return; }
+      }
+    }catch(e){}
+    show('login');
+  }
+
+  /* 로그인 (회원/관리자 통합) */
+  async function doLogin(){
+    var id = document.getElementById('loginId').value.trim();
+    var pw = document.getElementById('loginPw').value;
+    if(!id || !pw){ alert('아이디와 비밀번호를 입력해 주세요.'); return; }
+    var btn = document.getElementById('loginBtn');
+    btn.disabled = true; btn.textContent = '확인 중…';
+    try{
+      var h = await sha256Hex(pw);
+      if(id === ADMIN_ID){
+        var ar = await backendJsonp({ action:'adminlogin', id:id, h:h });
+        if(ar && ar.ok){
+          adminKey = h;
+          try{ sessionStorage.setItem('haegwang_admin', h); }catch(e){}
+          show('admin'); loadAll();
+        } else { alert('관리자 비밀번호가 올바르지 않습니다.'); }
+      } else {
+        var r = await backendJsonp({ action:'login', id:id, h:h });
+        if(r && r.ok){
+          me = { id:id, h:h, type:r.type, status:r.status, name:r.name, email:r.email, company:r.company };
+          try{ sessionStorage.setItem('haegwang_user', JSON.stringify(me)); }catch(e){}
+          document.getElementById('meName').textContent = r.name || id;
+          show('member'); loadMine();
+        } else if(r && r.withdrawn){
+          alert('탈퇴 처리된 계정입니다.');
+        } else {
+          alert('아이디 또는 비밀번호가 일치하지 않습니다.\n아직 회원이 아니시면 홈에서 회원가입을 해주세요.');
+        }
+      }
+    }catch(e){
+      alert('서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+    }
+    btn.disabled = false; btn.textContent = '로그인';
+    document.getElementById('loginPw').value = '';
+  }
+
+  function logout(){
+    try{ sessionStorage.removeItem('haegwang_admin'); }catch(e){}
+    me = null; adminKey = null;
+    document.getElementById('loginId').value=''; document.getElementById('loginPw').value='';
+    show('login');
+  }
+
+  /* ── 회원: 내 문의 ── */
+  async function loadMine(){
+    var box = document.getElementById('myList');
+    box.innerHTML = '<div class="spin">불러오는 중…</div>';
+    try{
+      var r = await backendJsonp({ action:'inquiry_list', id:me.id, h:me.h });
+      if(!r || !r.ok){ box.innerHTML = '<div class="empty">목록을 불러오지 못했습니다. 다시 로그인해 주세요.</div>'; return; }
+      renderMine(r.items || []);
+    }catch(e){ box.innerHTML = '<div class="empty">서버 연결 실패. 잠시 후 새로고침해 주세요.</div>'; }
+  }
+  function renderMine(items){
+    var box = document.getElementById('myList');
+    if(!items.length){ box.innerHTML = '<div class="empty">아직 등록한 문의가 없습니다.<br>위에서 첫 문의를 남겨보세요.</div>'; return; }
+    box.innerHTML = items.map(function(q){
+      var st = q.status || '접수';
+      var reply = (q.reply && String(q.reply).trim()) ?
+        '<div class="q-reply"><div class="lbl">💬 관리자 답변</div><div class="txt">'+esc(q.reply)+'</div></div>' :
+        '<div class="hint" style="margin-top:8px">⏳ 답변 대기 중입니다.</div>';
+      return '<div class="q-item">'+
+        '<div class="q-head"><div><div class="q-title">'+esc(q.title)+'</div>'+
+        '<div class="q-meta">'+fmtDate(q.ts)+'</div></div>'+
+        '<span class="q-status st-'+esc(st)+'">'+esc(st)+'</span></div>'+
+        '<div class="q-body">'+esc(q.content)+'</div>'+ reply +
+        '<div class="btn-row"><button class="btn btn-danger" onclick="delMine(\''+esc(q.iid)+'\')">삭제</button></div>'+
+        '</div>';
+    }).join('');
+  }
+  async function submitInquiry(){
+    var title = document.getElementById('qTitle').value.trim();
+    var content = document.getElementById('qContent').value.trim();
+    if(!title){ alert('제목을 입력해 주세요.'); return; }
+    if(!content){ alert('내용을 입력해 주세요.'); return; }
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = '등록 중…';
+    try{
+      var r = await backendJsonp({ action:'inquiry_create', id:me.id, h:me.h, title:title, content:content });
+      if(r && r.ok){
+        document.getElementById('qTitle').value=''; document.getElementById('qContent').value='';
+        if(window.gtag) gtag('event','inquiry_create');
+        alert('문의가 등록되었습니다. 관리자 답변은 답변 등록 시 가입 이메일로도 알려드립니다.');
+        loadMine();
+      } else { alert('등록에 실패했습니다. 다시 로그인 후 시도해 주세요.'); }
+    }catch(e){ alert('서버 연결 실패. 잠시 후 다시 시도해 주세요.'); }
+    btn.disabled = false; btn.textContent = '문의 등록';
+  }
+  async function delMine(iid){
+    if(!confirm('이 문의를 삭제할까요?')) return;
+    try{
+      var r = await backendJsonp({ action:'inquiry_delete', id:me.id, h:me.h, iid:iid });
+      if(r && r.ok){ loadMine(); } else { alert('삭제에 실패했습니다.'); }
+    }catch(e){ alert('서버 연결 실패.'); }
+  }
+
+  /* ── 관리자: 전체 문의 + 답변 ── */
+  async function loadAll(){
+    var box = document.getElementById('adminList');
+    box.innerHTML = '<div class="spin">불러오는 중…</div>';
+    try{
+      var r = await backendJsonp({ action:'inquiry_all', key:adminKey });
+      if(!r || !r.ok){ box.innerHTML = '<div class="empty">불러오지 못했습니다. 다시 로그인해 주세요.</div>'; return; }
+      renderAll(r.items || []);
+    }catch(e){ box.innerHTML = '<div class="empty">서버 연결 실패. 새로고침해 주세요.</div>'; }
+  }
+  function renderAll(items){
+    var box = document.getElementById('adminList');
+    if(!items.length){ box.innerHTML = '<div class="empty">등록된 문의가 없습니다.</div>'; return; }
+    box.innerHTML = items.map(function(q){
+      var st = q.status || '접수';
+      var typeLabel = q.type==='company' ? '기업회원' : '기사회원';
+      var existing = (q.reply && String(q.reply).trim()) ?
+        '<div class="q-reply"><div class="lbl">💬 등록된 답변 ('+fmtDate(q.replyTs)+')</div><div class="txt">'+esc(q.reply)+'</div></div>' : '';
+      return '<div class="q-item">'+
+        '<div class="q-head"><div>'+
+        '<div class="q-author">'+esc(q.name||'')+' · '+typeLabel+' (ID: '+esc(q.authorId)+')</div>'+
+        '<div class="q-title">'+esc(q.title)+'</div>'+
+        '<div class="q-meta">'+fmtDate(q.ts)+'</div></div>'+
+        '<span class="q-status st-'+esc(st)+'">'+esc(st)+'</span></div>'+
+        '<div class="q-body">'+esc(q.content)+'</div>'+ existing +
+        '<div class="reply-box">'+
+        '<label>답변 작성</label>'+
+        '<textarea id="rep_'+esc(q.iid)+'" placeholder="답변 내용을 입력하세요">'+esc(q.reply||'')+'</textarea>'+
+        '<div class="btn-row">'+
+        '<button class="btn" onclick="sendReply(\''+esc(q.iid)+'\')">답변 등록</button>'+
+        '<button class="btn btn-danger" onclick="delAdmin(\''+esc(q.iid)+'\')">문의 삭제</button>'+
+        '</div></div>'+
+        '</div>';
+    }).join('');
+  }
+  async function sendReply(iid){
+    var ta = document.getElementById('rep_'+iid);
+    var reply = ta ? ta.value.trim() : '';
+    if(!reply){ alert('답변 내용을 입력해 주세요.'); return; }
+    try{
+      var r = await backendJsonp({ action:'inquiry_reply', key:adminKey, iid:iid, reply:reply });
+      if(r && r.ok){ alert('답변이 등록되었습니다. 작성자에게 이메일로도 알림이 발송됩니다.'); loadAll(); }
+      else { alert('답변 등록에 실패했습니다.'); }
+    }catch(e){ alert('서버 연결 실패.'); }
+  }
+  async function delAdmin(iid){
+    if(!confirm('이 문의를 삭제할까요? (복구 불가)')) return;
+    try{
+      var r = await backendJsonp({ action:'inquiry_delete', key:adminKey, iid:iid });
+      if(r && r.ok){ loadAll(); } else { alert('삭제에 실패했습니다.'); }
+    }catch(e){ alert('서버 연결 실패.'); }
+  }
+
+  /* 엔터 제출 */
+  document.getElementById('loginPw').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+
+  init();
+</script>
+</body>
+</html>
