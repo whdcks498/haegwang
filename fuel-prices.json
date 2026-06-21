@@ -1,110 +1,110 @@
 {
-  "date": "20260620",
-  "updated": "2026-06-20",
+  "date": "20260621",
+  "updated": "2026-06-21",
   "source": "한국석유공사 오피넷",
   "oil": {
     "premium": {
-      "price": 2438.63,
-      "diff": -0.65
+      "price": 2438.64,
+      "diff": -0.07
     },
     "gasoline": {
       "price": 2008.74,
-      "diff": -0.02
+      "diff": 0.03
     },
     "diesel": {
-      "price": 2003.38,
-      "diff": -0.33
+      "price": 2003.42,
+      "diff": 0.03
     },
     "lpg": {
-      "price": 1107.9,
-      "diff": 0.11
+      "price": 1107.83,
+      "diff": -0.07
     }
   },
   "sido": [
     {
       "name": "서울",
-      "price": 2040.49,
-      "diff": 0
+      "price": 2040.42,
+      "diff": -0.07
     },
     {
       "name": "경기",
-      "price": 2002.13,
-      "diff": -0.55
+      "price": 2002.18,
+      "diff": -0.05
     },
     {
       "name": "강원",
-      "price": 2011.9,
+      "price": 2011.63,
       "diff": -0.1
     },
     {
       "name": "충북",
-      "price": 2009.46,
-      "diff": -0.16
+      "price": 2009.29,
+      "diff": -0.07
     },
     {
       "name": "충남",
-      "price": 2008.05,
-      "diff": -0.24
+      "price": 2007.89,
+      "diff": -0.03
     },
     {
       "name": "전북",
-      "price": 2001.83,
-      "diff": 0.17
+      "price": 2002.02,
+      "diff": 0.94
     },
     {
       "name": "전남",
-      "price": 2009.23,
-      "diff": -0.39
+      "price": 2009.31,
+      "diff": 0.14
     },
     {
       "name": "경북",
-      "price": 1996.79,
-      "diff": -0.88
+      "price": 1997.4,
+      "diff": -0.06
     },
     {
       "name": "경남",
-      "price": 1997.93,
-      "diff": -0.26
+      "price": 1997.94,
+      "diff": 0.16
     },
     {
       "name": "부산",
-      "price": 1987.69,
-      "diff": -0.83
+      "price": 1987.7,
+      "diff": 0.02
     },
     {
       "name": "제주",
-      "price": 2019.63,
-      "diff": 0.11
+      "price": 2019.68,
+      "diff": -0.82
     },
     {
       "name": "대구",
-      "price": 1982.7,
-      "diff": -0.4
+      "price": 1982.58,
+      "diff": -0.02
     },
     {
       "name": "인천",
-      "price": 2001.56,
-      "diff": 0.08
+      "price": 2001.6,
+      "diff": -0.06
     },
     {
       "name": "광주",
-      "price": 1995.03,
-      "diff": -0.26
+      "price": 1995.09,
+      "diff": -0.04
     },
     {
       "name": "대전",
-      "price": 1992.9,
-      "diff": 0.18
+      "price": 1992.53,
+      "diff": -0.48
     },
     {
       "name": "울산",
-      "price": 1990.4,
-      "diff": -0.27
+      "price": 1990.22,
+      "diff": -0.18
     },
     {
       "name": "세종",
-      "price": 2001.75,
-      "diff": -0.17
+      "price": 2001.73,
+      "diff": -0.13
     }
   ]
 }
