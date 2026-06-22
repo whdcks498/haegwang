@@ -2525,9 +2525,9 @@
     /* ── 일반/기업 회원 로그인 (서버 검증) ── */
     const btn = document.querySelector('#loginUserForm .btn-modal-submit');
     if(btn){ btn.disabled = true; btn.textContent = '확인 중...'; }
-    let res = null;
+    let res = null, h = '';
     try{
-      const h = await sha256Hex(pw);
+      h = await sha256Hex(pw);
       res = await backendJsonp({ action:'login', id:id, h:h });
     }catch(e){
       if(btn){ btn.disabled=false; btn.textContent='로그인'; }
