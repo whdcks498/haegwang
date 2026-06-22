@@ -1,0 +1,32 @@
+name: Uptime & Backend Health (가동·백엔드 점검)
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # 6시간마다 (하루 4회) 자동 점검
+  workflow_dispatch:        # 수동 실행 버튼
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check live site (홈페이지 가동)
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://whdcks498.github.io/haegwang/)
+          echo "site http_code = $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::홈페이지가 정상 응답하지 않습니다 (HTTP $code)"
+            exit 1
+          fi
+      - name: Check member backend (회원 백엔드 - 콜드스타트 대비 재시도)
+        run: |
+          url="https://script.google.com/macros/s/AKfycbwXgo6OHo7zbW2chGv5eW2JsphWjMTV4hNq4iaJfVyS2SdbgKnc3SSPVr555kqkP_zy/exec?action=checkid&id=__uptimeping__&callback=cb"
+          ok=0
+          for i in 1 2 3; do
+            body=$(curl -sL --max-time 50 "$url" || true)
+            echo "attempt $i: $body"
+            if echo "$body" | grep -q "exists"; then ok=1; break; fi
+            echo "재시도 대기..."; sleep 15
+          done
+          if [ "$ok" != "1" ]; then
+            echo "::error::회원 백엔드(Apps Script)가 정상 응답하지 않습니다 - 로그인/가입 영향 가능"
+            exit 1
+          fi
+          echo "백엔드 정상"
