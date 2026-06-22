@@ -3317,6 +3317,7 @@
         var cleanTitle = d.title.replace(/\[[^\]]*\]/g,'').trim() || d.title;
         var desc = (d.desc && d.desc.length>20) ? d.desc
           : (cleanTitle + ' — ' + '화물구인구직' + ' 화물기사 모집. ' + (d.type||'') + ' ' + (d.region||'전국') + ' 운행, 초보·고령(70세) 환영, 상시모집. 문의 010-7233-3916.');
+        var _s=(d.salary||"").replace(/[, ]/g,""); var _m=_s.match(/(\d+)[~\u223c\-](\d+)\s*\uB9CC/); var _smin=_m?parseInt(_m[1])*10000:null,_smax=_m?parseInt(_m[2])*10000:null; if(!_m){var _o=_s.match(/(\d+)\s*\uB9CC/); if(_o)_smin=parseInt(_o[1])*10000;}
         var ld = {
           "@context":"https://schema.org/","@type":"JobPosting",
           "title": cleanTitle,
@@ -3325,11 +3326,13 @@
           "validThrough": valid,
           "employmentType": "FULL_TIME",
           "industry": "화물운송·물류",
-          "hiringOrganization": {"@type":"Organization","name": "화물구인구직","telephone":"010-7233-3916","sameAs":"https://whdcks498.github.io/haegwang/"},
+          "jobBenefits": "4대보험 가입, 유류비·통행료 지원, 명절상여, 고정노선 우선배차",
+          "hiringOrganization": {"@type":"Organization","name":"화물구인구직","telephone":"010-7233-3916","sameAs":"https://whdcks498.github.io/haegwang/","address":{"@type":"PostalAddress","streetAddress":"벚꽃로36길 30 KS타워 1605호","addressLocality":"금천구","addressRegion":"서울특별시","postalCode":"08589","addressCountry":"KR"}},
           "jobLocation": {"@type":"Place","address":{"@type":"PostalAddress","addressLocality": region,"addressRegion": region,"addressCountry":"KR"}},
           "identifier": {"@type":"PropertyValue","name": "화물구인구직","value": (card.dataset.docid || card.dataset.jid || cleanTitle)},
           "directApply": true
         };
+        if(_smin){ ld.baseSalary={"@type":"MonetaryAmount","currency":"KRW","value":{"@type":"QuantitativeValue","minValue":_smin,"maxValue":_smax||_smin,"unitText":"MONTH"}}; }
         var sc = document.createElement('script');
         sc.type = 'application/ld+json';
         sc.setAttribute('data-jobld','1');
