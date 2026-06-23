@@ -1,6 +1,6 @@
 {
  "site": "해광툰",
- "updated": "2026-06-21",
+ "updated": "2026-06-23",
  "series": [
   {
    "id": "jongchan",
@@ -998,6 +998,136 @@
       },
       {
        "img": "toon/9/40.jpg"
+      }
+     ]
+    },
+    {
+     "no": 10,
+     "title": "압력을 뚫고 — 이제 시작이다",
+     "date": "2026-06-23",
+     "likes": 0,
+     "thumb": "<img src='toon/10/01.jpg' style='width:100%;height:100%;object-fit:cover;display:block'>",
+     "thumbBg": "#0b1733",
+     "panels": [
+      {
+       "img": "toon/10/01.jpg"
+      },
+      {
+       "img": "toon/10/02.jpg"
+      },
+      {
+       "img": "toon/10/03.jpg"
+      },
+      {
+       "img": "toon/10/04.jpg"
+      },
+      {
+       "img": "toon/10/05.jpg"
+      },
+      {
+       "img": "toon/10/06.jpg"
+      },
+      {
+       "img": "toon/10/07.jpg"
+      },
+      {
+       "img": "toon/10/08.jpg"
+      },
+      {
+       "img": "toon/10/09.jpg"
+      },
+      {
+       "img": "toon/10/10.jpg"
+      },
+      {
+       "img": "toon/10/11.jpg"
+      },
+      {
+       "img": "toon/10/12.jpg"
+      },
+      {
+       "img": "toon/10/13.jpg"
+      },
+      {
+       "img": "toon/10/14.jpg"
+      },
+      {
+       "img": "toon/10/15.jpg"
+      },
+      {
+       "img": "toon/10/16.jpg"
+      },
+      {
+       "img": "toon/10/17.jpg"
+      },
+      {
+       "img": "toon/10/18.jpg"
+      },
+      {
+       "img": "toon/10/19.jpg"
+      },
+      {
+       "img": "toon/10/20.jpg"
+      },
+      {
+       "img": "toon/10/21.jpg"
+      },
+      {
+       "img": "toon/10/22.jpg"
+      },
+      {
+       "img": "toon/10/23.jpg"
+      },
+      {
+       "img": "toon/10/24.jpg"
+      },
+      {
+       "img": "toon/10/25.jpg"
+      },
+      {
+       "img": "toon/10/26.jpg"
+      },
+      {
+       "img": "toon/10/27.jpg"
+      },
+      {
+       "img": "toon/10/28.jpg"
+      },
+      {
+       "img": "toon/10/29.jpg"
+      },
+      {
+       "img": "toon/10/30.jpg"
+      },
+      {
+       "img": "toon/10/31.jpg"
+      },
+      {
+       "img": "toon/10/32.jpg"
+      },
+      {
+       "img": "toon/10/33.jpg"
+      },
+      {
+       "img": "toon/10/34.jpg"
+      },
+      {
+       "img": "toon/10/35.jpg"
+      },
+      {
+       "img": "toon/10/36.jpg"
+      },
+      {
+       "img": "toon/10/37.jpg"
+      },
+      {
+       "img": "toon/10/38.jpg"
+      },
+      {
+       "img": "toon/10/39.jpg"
+      },
+      {
+       "img": "toon/10/40.jpg"
       }
      ]
     }
