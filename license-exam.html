@@ -18,7 +18,7 @@
 <link rel="canonical" href="https://whdcks498.github.io/haegwang/license-exam.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="화물운송종사 자격증 모의시험 — 합격 시뮬레이션">
-<meta property="og:description" content="실전 80문항 모의고사·과목별 연습·자동채점·오답노트. 해광 화물운송 회원 전용.">
+<meta property="og:description" content="실전 80문항 모의고사·과목별 연습·자동채점·오답노트까지 누구나 무료. 화물운송종사 자격증 준비 - 해광 화물운송.">
 <meta property="og:url" content="https://whdcks498.github.io/haegwang/license-exam.html">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:site_name" content="화물구인구직">
@@ -95,10 +95,15 @@ a{color:var(--navy);text-decoration:none}
 <header class="top">
   <a class="home" href="https://whdcks498.github.io/haegwang/">← 화물구인구직 홈으로</a>
   <h1>📝 화물운송종사 자격증 모의시험</h1>
-  <p>실전 모의고사 · 과목별 연습 · 자동 채점 · 합격 시뮬레이션 (회원 전용)</p>
+  <p>실전 모의고사 · 과목별 연습 · 자동 채점 · 합격 시뮬레이션 — 누구나 무료</p>
 </header>
 
 <main class="wrap">
+  <div class="sharebar">
+    <span class="sharebar-label">👍 도움이 됐다면 공유해 주세요</span>
+    <button type="button" class="share-btn kakao" onclick="shareExam()">📤 공유하기</button>
+    <button type="button" class="share-btn copy" onclick="copyExamLink()">🔗 링크 복사</button>
+  </div>
   <!-- 회원 게이트 -->
   <section id="gate" class="card gate hidden">
     <div class="ico">🔒</div>
@@ -324,6 +329,18 @@ function showResult(correct,bySubj){
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 init();
+</script>
+<style>
+.sharebar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:#f4f7ff;border:1px solid #e3e7ef;border-radius:12px;padding:12px 14px;margin:0 auto 16px;max-width:680px}
+.sharebar-label{font-size:13.5px;font-weight:700;color:#15326f}
+.share-btn{border:0;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:800;cursor:pointer}
+.share-btn.kakao{background:#FEE500;color:#191600}
+.share-btn.copy{background:#15326f;color:#fff}
+.share-btn:active{transform:translateY(1px)}
+</style>
+<script>
+function shareExam(){var u=location.href.split("?")[0].split("#")[0];var d={title:"화물운송종사 자격증 무료 모의고사",text:"회원가입 없이 바로! 실전 80문항·자동채점·오답노트 무료 모의고사",url:u};if(typeof gtag=="function")gtag("event","share_click",{method:"web_share"});if(navigator.share){navigator.share(d).catch(function(){});}else{copyExamLink();}}
+function copyExamLink(){var u=location.href.split("?")[0].split("#")[0];if(typeof gtag=="function")gtag("event","share_click",{method:"copy_link"});function ok(){alert("링크가 복사됐어요!\n카톡·블로그·카페에 붙여넣기 하세요.");}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok,function(){prompt("아래 링크를 복사하세요:",u);});}else{prompt("아래 링크를 복사하세요:",u);}}
 </script>
 </body>
 </html>
