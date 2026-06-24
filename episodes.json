@@ -1531,6 +1531,136 @@
        "img": "toon/pyo/2/40.jpg"
       }
      ]
+    },
+    {
+     "no": 3,
+     "title": "길이 막히면, 길을 만들면 되죠",
+     "date": "2026-06-24",
+     "likes": 0,
+     "thumb": "<img src='toon/pyo/3/01.jpg' style='width:100%;height:100%;object-fit:cover;display:block'>",
+     "thumbBg": "#1a1530",
+     "panels": [
+      {
+       "img": "toon/pyo/3/01.jpg"
+      },
+      {
+       "img": "toon/pyo/3/02.jpg"
+      },
+      {
+       "img": "toon/pyo/3/03.jpg"
+      },
+      {
+       "img": "toon/pyo/3/04.jpg"
+      },
+      {
+       "img": "toon/pyo/3/05.jpg"
+      },
+      {
+       "img": "toon/pyo/3/06.jpg"
+      },
+      {
+       "img": "toon/pyo/3/07.jpg"
+      },
+      {
+       "img": "toon/pyo/3/08.jpg"
+      },
+      {
+       "img": "toon/pyo/3/09.jpg"
+      },
+      {
+       "img": "toon/pyo/3/10.jpg"
+      },
+      {
+       "img": "toon/pyo/3/11.jpg"
+      },
+      {
+       "img": "toon/pyo/3/12.jpg"
+      },
+      {
+       "img": "toon/pyo/3/13.jpg"
+      },
+      {
+       "img": "toon/pyo/3/14.jpg"
+      },
+      {
+       "img": "toon/pyo/3/15.jpg"
+      },
+      {
+       "img": "toon/pyo/3/16.jpg"
+      },
+      {
+       "img": "toon/pyo/3/17.jpg"
+      },
+      {
+       "img": "toon/pyo/3/18.jpg"
+      },
+      {
+       "img": "toon/pyo/3/19.jpg"
+      },
+      {
+       "img": "toon/pyo/3/20.jpg"
+      },
+      {
+       "img": "toon/pyo/3/21.jpg"
+      },
+      {
+       "img": "toon/pyo/3/22.jpg"
+      },
+      {
+       "img": "toon/pyo/3/23.jpg"
+      },
+      {
+       "img": "toon/pyo/3/24.jpg"
+      },
+      {
+       "img": "toon/pyo/3/25.jpg"
+      },
+      {
+       "img": "toon/pyo/3/26.jpg"
+      },
+      {
+       "img": "toon/pyo/3/27.jpg"
+      },
+      {
+       "img": "toon/pyo/3/28.jpg"
+      },
+      {
+       "img": "toon/pyo/3/29.jpg"
+      },
+      {
+       "img": "toon/pyo/3/30.jpg"
+      },
+      {
+       "img": "toon/pyo/3/31.jpg"
+      },
+      {
+       "img": "toon/pyo/3/32.jpg"
+      },
+      {
+       "img": "toon/pyo/3/33.jpg"
+      },
+      {
+       "img": "toon/pyo/3/34.jpg"
+      },
+      {
+       "img": "toon/pyo/3/35.jpg"
+      },
+      {
+       "img": "toon/pyo/3/36.jpg"
+      },
+      {
+       "img": "toon/pyo/3/37.jpg"
+      },
+      {
+       "img": "toon/pyo/3/38.jpg"
+      },
+      {
+       "img": "toon/pyo/3/39.jpg"
+      },
+      {
+       "img": "toon/pyo/3/40.jpg"
+      }
+     ]
     }
    ]
   }
