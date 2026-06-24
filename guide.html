@@ -192,6 +192,7 @@
       <li><a href="article-2026-06-11.html">화물운송종사자격증 시험 준비 방법과 합격 팁</a></li>
       <li><a href="article-2026-06-10.html">초보 화물기사 첫 출근 준비물과 마음가짐</a></li>
     </ul>
+    <nav class="pager" id="guidePager" aria-label="취업정보 페이지"></nav>
   </article>
 
   <p class="note">
@@ -200,5 +201,18 @@
   </p>
 
 </main>
+
+<style>
+.pager{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;margin:18px 0 4px}
+.pager button{min-width:36px;height:36px;padding:0 11px;border:1px solid #d4dcea;background:#fff;color:#1a3a8a;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+.pager button:hover{border-color:#1a3a8a}
+.pager button.active{background:#1a3a8a;color:#fff;border-color:#1a3a8a}
+.pager button:disabled{opacity:.4;cursor:default}
+.pg-hide{display:none!important}
+</style>
+
+<script>
+(function(){var PER=5,ul=document.querySelector('#moreArticles ul'),pg=document.getElementById('guidePager');if(!ul||!pg)return;function items(){return [].slice.call(ul.querySelectorAll(':scope>li'));}var cur=1;function btn(tx,dis,on,act){var b=document.createElement('button');b.textContent=tx;if(dis)b.disabled=true;if(act)b.className='active';if(on)b.onclick=on;return b;}function render(){var it=items(),pages=Math.max(1,Math.ceil(it.length/PER));if(cur>pages)cur=pages;it.forEach(function(li,i){li.classList.toggle('pg-hide',Math.floor(i/PER)+1!==cur);});pg.innerHTML='';if(pages<=1)return;pg.appendChild(btn('‹',cur===1,function(){if(cur>1){cur--;render();}}));for(var p=1;p<=pages;p++){(function(p){pg.appendChild(btn(String(p),false,function(){cur=p;render();},p===cur));})(p);}pg.appendChild(btn('›',cur===pages,function(){if(cur<pages){cur++;render();}}));}render();})();
+</script>
 </body>
 </html>
