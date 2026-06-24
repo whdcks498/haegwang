@@ -8,7 +8,7 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-SGNM9VX949');
-  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a');if(a&&(a.href||'').indexOf('forms.gle')>-1&&typeof gtag=='function')gtag('event','resume_apply',{link_url:a.href});},true);
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a');if(!a||typeof gtag!='function')return;var h=a.href||'';if(h.indexOf('forms.gle')>-1)gtag('event','resume_apply',{link_url:h});else if(h.indexOf('tel:')===0)gtag('event','call_click',{link_url:h});else if(h.indexOf('sms:')===0)gtag('event','sms_click',{link_url:h});},true);
 </script>
 
 <meta charset="UTF-8">
@@ -1905,7 +1905,7 @@
       <div class="qc-phone">010-7233-3916</div>
       <div class="qc-btns">
         <a class="qc-call" href="tel:01072333916">📞 전화 상담</a>
-        <a class="qc-sms" href="sms:01072333916">✉️ 문자 남기기</a>
+        <a class="qc-sms" href="sms:01072333916?body=화물%20일자리%20문의합니다">✉️ 문자 남기기</a>
       </div>
     </div>
 
@@ -3505,12 +3505,14 @@
   .m-callbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:99999;box-shadow:0 -2px 10px rgba(0,0,0,.18)}
   .m-callbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:14px 0;font-size:16px;font-weight:800;text-decoration:none;letter-spacing:-.3px}
   .m-callbar .mc-call{background:#15326f;color:#fff}
+  .m-callbar .mc-sms{background:#34c759;color:#fff}
   .m-callbar .mc-resume{background:#ffd400;color:#15326f}
   body{padding-bottom:56px}
 }
 </style>
 <div class="m-callbar">
-  <a class="mc-call" href="tel:01072333916">📞 전화 문의</a>
+  <a class="mc-call" href="tel:01072333916">📞 전화</a>
+  <a class="mc-sms" href="sms:01072333916?body=화물%20일자리%20문의합니다">✉️ 문자</a>
   <a class="mc-resume" href="https://forms.gle/HixdqkYMSfwD1kyH7" target="_blank" rel="noopener">📝 이력서 등록</a>
 </div>
 
