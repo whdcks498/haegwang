@@ -16,7 +16,7 @@ jobs:
         id: lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress --max-concurrency 4 --exclude '\$' './**/*.html'
+          args: --no-progress --max-concurrency 4 --base-url https://whdcks498.github.io/haegwang/ --exclude '\$' './**/*.html'
           fail: false
       - name: Create Issue if broken links found
         if: steps.lychee.outputs.exit_code != 0
