@@ -119,8 +119,12 @@ a{color:var(--navy);text-decoration:none}
     </div>
     <div class="modes">
       <div class="mode" onclick="startExam('real')">
-        <div class="t">🎯 실전 모의고사</div>
+        <div class="t">🎯 실전 모의고사 (기본)</div>
         <div class="d">실제와 동일하게 <b>4과목 80문항 · 80분</b> 타이머. 끝나면 합격(60%·48문항) 여부를 판정합니다.</div>
+      </div>
+      <div class="mode" onclick="startExam('hard')" style="border-color:#c0392b">
+        <div class="t">🔥 실전 모의고사 (고난이도)</div>
+        <div class="d"><b>4과목 80문항·80분</b> — 법규 수치·차량동역학·물류용어 등 <b>고난도 문제로만</b> 구성. 변별력 강화!</div>
       </div>
       <div class="mode" onclick="showSubjects()">
         <div class="t">📚 과목별 연습</div>
@@ -182,6 +186,8 @@ let BANK=null, SUBJECTS=[], curQuiz=[], curIdx=0, answers=[], mode='real', timer
 function getUser(){ try{ return JSON.parse(sessionStorage.getItem('haegwang_user')||'null'); }catch(e){ return null; } }
 
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+// 매 응시마다 보기 순서를 무작위로 섞어 정답 위치 쏠림을 방지 (원본 BANK 보존)
+function shuffleOptions(q){ const idx=q.options.map((_,i)=>i); shuffle(idx); return Object.assign({}, q, { options: idx.map(i=>q.options[i]), answer: idx.indexOf(q.answer) }); }
 
 async function init(){
   const user=getUser();
@@ -211,19 +217,20 @@ function showSubjects(){ document.getElementById('subjPick').classList.remove('h
 
 function startPractice(subjId){
   mode='practice';
-  curQuiz=shuffle(BANK.questions.filter(q=>q.subject===subjId).slice());
+  curQuiz=shuffle(BANK.questions.filter(q=>q.subject===subjId).slice()).map(shuffleOptions);
   beginQuiz(false);
 }
 
-function startExam(){
-  mode='real';
+function startExam(level){
+  mode=(level==='hard')?'hard':'real';
+  const wantHard=(mode==='hard');
   // 과목별 examCount만큼 추출 → 합쳐서 셔플 (실전 80문항)
   let set=[];
   SUBJECTS.forEach(s=>{
-    const pool=shuffle(BANK.questions.filter(q=>q.subject===s.id).slice());
+    const pool=shuffle(BANK.questions.filter(q=>q.subject===s.id && (wantHard?q.level==='hard':q.level!=='hard')).slice());
     set=set.concat(pool.slice(0, s.examCount));
   });
-  curQuiz=shuffle(set);
+  curQuiz=shuffle(set).map(shuffleOptions);
   beginQuiz(true);
 }
 
@@ -298,11 +305,11 @@ function showResult(correct,bySubj){
   const total=curQuiz.length;
   const pct=Math.round(correct/total*100);
   // 실전(80문항)은 48문항 기준, 연습은 60% 기준
-  const passByCount = (mode==='real') ? (correct>=(BANK.meta.passLine||48)) : (pct>=60);
+  const passByCount = (mode!=='practice') ? (correct>=(BANK.meta.passLine||48)) : (pct>=60);
   const badge=document.getElementById('passBadge'), scoreNum=document.getElementById('scoreNum'), msg=document.getElementById('scoreMsg');
   scoreNum.textContent=correct+' / '+total+' ('+pct+'점)';
-  if(passByCount){ badge.innerHTML='<span class="pass">🎉 합격 예상!</span>'; scoreNum.className='result-score pass'; msg.textContent=(mode==='real'?'실전 기준 48문항 이상 정답 — 합격선을 넘었습니다!':'60% 이상 — 잘하셨어요!'); }
-  else{ badge.innerHTML='<span class="fail">📚 조금 더!</span>'; scoreNum.className='result-score fail'; msg.textContent=(mode==='real'?'합격선(48문항)에 '+((BANK.meta.passLine||48)-correct)+'문항 부족합니다. 오답노트로 복습해요!':'60%에 조금 못 미쳤어요. 오답을 확인해 보세요.'); }
+  if(passByCount){ badge.innerHTML='<span class="pass">🎉 합격 예상!</span>'; scoreNum.className='result-score pass'; msg.textContent=(mode!=='practice'?'실전 기준 48문항 이상 정답 — 합격선을 넘었습니다!':'60% 이상 — 잘하셨어요!'); }
+  else{ badge.innerHTML='<span class="fail">📚 조금 더!</span>'; scoreNum.className='result-score fail'; msg.textContent=(mode!=='practice'?'합격선(48문항)에 '+((BANK.meta.passLine||48)-correct)+'문항 부족합니다. 오답노트로 복습해요!':'60%에 조금 못 미쳤어요. 오답을 확인해 보세요.'); }
   // 과목별 막대
   let bars='';
   Object.values(bySubj).forEach(s=>{
