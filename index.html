@@ -3341,7 +3341,7 @@
       document.querySelectorAll('script[data-jobld]').forEach(function(s){ s.remove(); });
       var today = new Date().toISOString().slice(0,10);
       var valid = new Date(Date.now()+90*864e5).toISOString().slice(0,10);
-      document.querySelectorAll('.job-list .job-card').forEach(function(card){
+      document.querySelectorAll('.job-list .job-card').forEach(function(card){ if(card.dataset && card.dataset.validThrough && new Date(card.dataset.validThrough) < new Date()) return; /* 만료공고 JobPosting 제외(예방) */
         var d = readCardData(card);
         if(!d.title) return;
         var region = (d.region||'전국').split('/')[0].replace(/전국/,'').trim() || '서울특별시';
