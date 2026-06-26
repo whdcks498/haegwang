@@ -1,6 +1,6 @@
 {
  "site": "해광툰",
- "updated": "2026-06-25",
+ "updated": "2026-06-26",
  "series": [
   {
    "id": "jongchan",
@@ -1388,6 +1388,136 @@
       },
       {
        "img": "toon/12/40.jpg"
+      }
+     ]
+    },
+    {
+     "no": 13,
+     "title": "김반장 합류, 4인 팀의 시작",
+     "date": "2026-06-26",
+     "likes": 0,
+     "thumb": "<img src='toon/13/01.jpg' style='width:100%;height:100%;object-fit:cover;display:block'>",
+     "thumbBg": "#2a2114",
+     "panels": [
+      {
+       "img": "toon/13/01.jpg"
+      },
+      {
+       "img": "toon/13/02.jpg"
+      },
+      {
+       "img": "toon/13/03.jpg"
+      },
+      {
+       "img": "toon/13/04.jpg"
+      },
+      {
+       "img": "toon/13/05.jpg"
+      },
+      {
+       "img": "toon/13/06.jpg"
+      },
+      {
+       "img": "toon/13/07.jpg"
+      },
+      {
+       "img": "toon/13/08.jpg"
+      },
+      {
+       "img": "toon/13/09.jpg"
+      },
+      {
+       "img": "toon/13/10.jpg"
+      },
+      {
+       "img": "toon/13/11.jpg"
+      },
+      {
+       "img": "toon/13/12.jpg"
+      },
+      {
+       "img": "toon/13/13.jpg"
+      },
+      {
+       "img": "toon/13/14.jpg"
+      },
+      {
+       "img": "toon/13/15.jpg"
+      },
+      {
+       "img": "toon/13/16.jpg"
+      },
+      {
+       "img": "toon/13/17.jpg"
+      },
+      {
+       "img": "toon/13/18.jpg"
+      },
+      {
+       "img": "toon/13/19.jpg"
+      },
+      {
+       "img": "toon/13/20.jpg"
+      },
+      {
+       "img": "toon/13/21.jpg"
+      },
+      {
+       "img": "toon/13/22.jpg"
+      },
+      {
+       "img": "toon/13/23.jpg"
+      },
+      {
+       "img": "toon/13/24.jpg"
+      },
+      {
+       "img": "toon/13/25.jpg"
+      },
+      {
+       "img": "toon/13/26.jpg"
+      },
+      {
+       "img": "toon/13/27.jpg"
+      },
+      {
+       "img": "toon/13/28.jpg"
+      },
+      {
+       "img": "toon/13/29.jpg"
+      },
+      {
+       "img": "toon/13/30.jpg"
+      },
+      {
+       "img": "toon/13/31.jpg"
+      },
+      {
+       "img": "toon/13/32.jpg"
+      },
+      {
+       "img": "toon/13/33.jpg"
+      },
+      {
+       "img": "toon/13/34.jpg"
+      },
+      {
+       "img": "toon/13/35.jpg"
+      },
+      {
+       "img": "toon/13/36.jpg"
+      },
+      {
+       "img": "toon/13/37.jpg"
+      },
+      {
+       "img": "toon/13/38.jpg"
+      },
+      {
+       "img": "toon/13/39.jpg"
+      },
+      {
+       "img": "toon/13/40.jpg"
       }
      ]
     }
