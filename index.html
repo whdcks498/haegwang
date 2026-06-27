@@ -3509,5 +3509,51 @@
   </span>
   <span class="fab-label"><b>1:1 문의</b><span>관리자와 비공개 상담</span></span>
 </a>
+
+<style id="jd-card-css">
+.jd-card{display:flex;flex-direction:column;gap:8px;margin:6px 0 4px}
+.jd-row{display:flex;gap:10px;align-items:flex-start;background:#f1f5ff;border:1px solid #dbe5ff;border-radius:10px;padding:10px 12px}
+.jd-lab{flex:0 0 84px;font-weight:800;color:#2563eb;font-size:13.5px}
+.jd-val{flex:1;color:#1e293b;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.jd-salbox{background:#2563eb;border-color:#2563eb}
+.jd-salbox .jd-lab{color:#fff}
+.jd-salbox .jd-val{color:#fff;font-weight:800;font-size:16px}
+.jd-plain{white-space:pre-wrap;color:#1e293b;font-size:14px;line-height:1.6;background:#f1f5ff;border:1px solid #dbe5ff;border-radius:10px;padding:12px}
+.jd-steps{margin:14px 0 4px;background:#f8fafc;border:1px dashed #93b4f5;border-radius:10px;padding:10px 12px}
+.jd-steps-t{font-weight:800;color:#2563eb;font-size:13px;margin-bottom:6px}
+.jd-steps-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.jd-step{background:#2563eb;color:#fff;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700}
+.jd-arr{color:#2563eb;font-weight:900}
+.jd-cta{display:flex;gap:10px;margin-top:14px}
+.jd-btn{flex:1;text-align:center;padding:15px 10px;border-radius:12px;font-weight:800;font-size:16px;text-decoration:none;color:#fff}
+.jd-sms{background:#16a34a}.jd-tel{background:#2563eb}
+@media(max-width:480px){.jd-lab{flex-basis:70px;font-size:13px}.jd-btn{font-size:15px;padding:14px 8px}}
+</style>
+<script>
+(function(){
+  function jdEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function parseRows(desc,items){
+    if(Array.isArray(items)&&items.length) return items.map(function(it){return {label:(it.label||it.k||'').trim(),value:(it.value||it.v||'').trim()};}).filter(function(x){return x.value;});
+    desc=(desc||'').trim(); if(!desc) return [];
+    var rows=[],m;
+    if(/\[[^\]]+\]/.test(desc)){ var re=/\[([^\]]+)\]\s*([^\[]*)/g; while((m=re.exec(desc))){ var v=m[2].replace(/\s*[\/·]\s*$/,'').trim(); if(v) rows.push({label:m[1].trim(),value:v}); } }
+    else if(/^\s*[^\n:：]{1,12}\s-\s/m.test(desc)){ desc.split(/\n+/).forEach(function(l){ var mm=l.match(/^\s*([^-\n]{1,12}?)\s-\s+(.+)$/); if(mm) rows.push({label:mm[1].replace(/\s+/g,'').trim(),value:mm[2].trim()}); }); }
+    else if(/[가-힣A-Za-z]{2,10}\s*[:：]/.test(desc)){ desc.split(/\n+/).forEach(function(l){ var mm=l.match(/^\s*([^:：\n]{1,12}?)\s*[:：]\s*(.+)$/); if(mm) rows.push({label:mm[1].trim(),value:mm[2].trim()}); }); }
+    return rows;
+  }
+  window.renderJobDetailCard=function(desc,items){
+    var rows=parseRows(desc,items),h='';
+    if(rows.length>=2){ h+='<div class="jd-card">'; rows.forEach(function(r){ var sal=/급여|월급|수입|임금/.test(r.label); h+='<div class="jd-row'+(sal?' jd-salbox':'')+'"><div class="jd-lab">'+jdEsc(r.label)+'</div><div class="jd-val">'+jdEsc(r.value)+'</div></div>'; }); h+='</div>'; }
+    else { h+='<div class="jd-plain">'+jdEsc(desc||'').replace(/\n/g,'<br>')+'</div>'; }
+    h+='<div class="jd-steps"><div class="jd-steps-t">전형절차</div><div class="jd-steps-row"><span class="jd-step">전화면접</span><span class="jd-arr">›</span><span class="jd-step">본사면접</span><span class="jd-arr">›</span><span class="jd-step">합격</span><span class="jd-arr">›</span><span class="jd-step">근무투입</span></div></div>';
+    var body=encodeURIComponent('[이름/나이/거주지/면허종류/희망톤수]');
+    h+='<div class="jd-cta"><a class="jd-btn jd-sms" href="sms:01072333916?body='+body+'">✉️ 문자 지원</a><a class="jd-btn jd-tel" href="tel:01072333916">📞 전화 지원</a></div>';
+    return h;
+  };
+  function wrapFn(){ if(typeof window.openJobDetailData!=='function'||window.__jdWrapped) return; var _o=window.openJobDetailData; window.openJobDetailData=function(data){ _o.apply(this,arguments); try{ var b=document.getElementById('jd_desc'); if(b) b.innerHTML=window.renderJobDetailCard(data&&data.desc, data&&data.items); }catch(e){} }; window.__jdWrapped=true; }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wrapFn); else wrapFn();
+  setTimeout(wrapFn,1500);
+})();
+</script>
 </body>
 </html>
