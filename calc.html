@@ -3,21 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>화물기사 예상 수입 계산기 | 차종·노선별 월수입 추정 - 화물구인구직</title>
-<meta name="description" content="화물기사 예상 월수입 계산기. 차종(1~25톤)·운행형태·경력, 또는 지입 매출·유류비·할부를 넣으면 예상 월수입과 연 환산을 바로 확인. 참고용 추정치.">
+<title>화물기사 실수령액·순수입 계산기 | 세전월급/매출 직접입력 - 화물구인구직</title>
+<meta name="description" content="화물기사 실수령액 계산기. 세전 월급을 직접 넣으면 4대보험·세금을 빼고 실수령액을, 지입은 매출에서 비용을 빼고 순수입을 바로 계산. 참고용 추정.">
 <link rel="canonical" href="https://whdcks498.github.io/haegwang/calc.html">
-<meta property="og:title" content="화물기사 예상 수입 계산기">
-<meta property="og:description" content="내 조건으로 예상 월수입을 가늠해 보세요 (참고용)">
+<meta property="og:title" content="화물기사 실수령액·순수입 계산기">
+<meta property="og:description" content="세전 월급 또는 매출·비용을 직접 넣으면 실수입이 바로 계산됩니다 (참고용)">
 <meta property="og:url" content="https://whdcks498.github.io/haegwang/calc.html">
 <meta property="og:type" content="website">
-<meta name="keywords" content="화물기사 수입 계산기, 화물기사 월수입, 화물기사 연봉, 화물기사 수입, 차종별 화물 수입, 지입 수입 계산, 1톤 5톤 11톤 수입, 해광 화물운송">
-<meta name="robots" content="index, follow">
-<meta property="og:image" content="https://whdcks498.github.io/haegwang/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://whdcks498.github.io/haegwang/og-image.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"화물기사 예상 수입 계산기","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"url":"https://whdcks498.github.io/haegwang/calc.html","description":"차종·운행형태·경력 또는 지입 매출·비용으로 화물기사 예상 월수입을 계산하는 무료 도구"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"화물기사 실수령액·순수입 계산기","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"url":"https://whdcks498.github.io/haegwang/calc.html","description":"세전 월급 직접 입력으로 실수령액을, 지입 매출·비용으로 순수입을 계산하는 무료 도구"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://whdcks498.github.io/haegwang/"},{"@type":"ListItem","position":2,"name":"화물기사 수입 계산기","item":"https://whdcks498.github.io/haegwang/calc.html"}]}</script>
 <style>
 *{box-sizing:border-box}
@@ -31,21 +24,21 @@ body{margin:0;font-family:'Pretendard','Apple SD Gothic Neo',-apple-system,Blink
 .pt-home{flex:none;font-size:13px;font-weight:700;color:#2563eb;text-decoration:none;border:1px solid #cdd8ea;border-radius:999px;padding:8px 14px;background:#f3f7ff;}
 .cw{max-width:560px;margin:0 auto;padding:22px 16px 50px;}
 .hero{text-align:center;margin-bottom:18px;}
-.hero h1{font-size:24px;font-weight:800;margin:0;}
+.hero h1{font-size:23px;font-weight:800;margin:0;}
 .hero p{font-size:13.5px;color:#5f6b7a;margin:6px 0 0;}
 .tabs{display:flex;gap:8px;margin-bottom:14px;}
-.ct{flex:1;padding:12px 6px;border:1px solid #d4dcea;background:#fff;border-radius:12px;font-size:14px;font-weight:700;color:#5f6b7a;cursor:pointer;transition:.15s;}
+.ct{flex:1;padding:12px 6px;border:1px solid #d4dcea;background:#fff;border-radius:12px;font-size:14px;font-weight:700;color:#5f6b7a;cursor:pointer;}
 .ct.on{background:#2563eb;border-color:#2563eb;color:#fff;}
 .card{background:#fff;border:1px solid #e3e7ee;border-radius:16px;padding:18px;}
 .fl{display:block;font-size:13px;font-weight:700;color:#3a4a63;margin:14px 0 6px;}
 .fl:first-child{margin-top:0;}
-select,input[type=number]{width:100%;padding:12px;border:1px solid #cdd8ea;border-radius:10px;font-size:15px;background:#fff;color:#1e2a4a;}
-.hr{height:1px;background:#eef1f6;margin:18px 0 4px;}
-.note{font-size:12.5px;color:#5f6b7a;line-height:1.6;background:#f3f7ff;border-radius:10px;padding:10px 12px;margin:10px 0 4px;}
+select,input[type=number]{width:100%;padding:12px;border:1px solid #cdd8ea;border-radius:10px;font-size:16px;background:#fff;color:#1e2a4a;}
+input[type=number]{font-weight:700;}
+.note{font-size:12.5px;color:#5f6b7a;line-height:1.6;background:#f3f7ff;border-radius:10px;padding:10px 12px;margin:14px 0 0;}
 .result{margin-top:16px;background:linear-gradient(135deg,#2563eb,#1e3a8a);color:#fff;border-radius:16px;padding:22px 18px;text-align:center;}
 .rlabel{font-size:13px;opacity:.85;}
 .big{font-size:34px;font-weight:800;margin:6px 0 4px;letter-spacing:-.5px;}
-.sub{font-size:13px;opacity:.92;}
+.sub{font-size:12.5px;opacity:.92;}
 .bd{margin:16px 0 4px;background:rgba(255,255,255,.12);border-radius:12px;padding:6px 12px;text-align:left;}
 .br-row{display:flex;justify-content:space-between;font-size:13.5px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.16);}
 .br-row:last-child{border-bottom:0;}
@@ -64,33 +57,35 @@ select,input[type=number]{width:100%;padding:12px;border:1px solid #cdd8ea;borde
 <a class="pt-home" href="index.html">← 홈으로</a>
 </header>
 <main class="cw">
-<div class="hero"><h1>🧮 화물기사 예상 수입 계산기</h1><p>내 조건을 넣으면 예상 월수입을 가늠해 드려요 · 참고용</p></div>
-<div class="tabs"><button id="tabSalary" class="ct on" onclick="setMode('salary')">월급제 (고용기사)</button><button id="tabJiip" class="ct" onclick="setMode('jiip')">지입·매출제 (사업자)</button></div>
+<div class="hero"><h1>🧮 화물기사 실수령액·순수입 계산기</h1><p>숫자를 직접 넣으면 실수입이 바로 계산됩니다 · 참고용</p></div>
+<div class="tabs"><button id="tabSalary" class="ct on" onclick="setMode('salary')">월급제 실수령액</button><button id="tabJiip" class="ct" onclick="setMode('jiip')">지입 순수입</button></div>
 <div class="card">
-<label class="fl">차종</label>
-<select id="truck" onchange="fillJiipDefaults();calc()"><option>1톤</option><option>1.4톤</option><option>2.5톤</option><option selected>5톤</option><option>11톤</option><option>25톤</option></select>
-<label class="fl">운행 형태</label>
-<select id="route" onchange="calc()"><option>시내·근거리</option><option selected>권역·중거리</option><option>전국·장거리</option><option>새벽배송·택배</option><option>고정노선</option></select>
-<label class="fl">경력</label>
-<select id="career" onchange="calc()"><option>초보(1년 미만)</option><option selected>1~3년</option><option>3년 이상</option></select>
+<label class="fl">차종 (선택 시 참고값 자동 입력)</label>
+<select id="truck" onchange="prefill();calc()"><option>1톤</option><option>1.4톤</option><option>2.5톤</option><option selected>5톤</option><option>11톤</option><option>25톤</option></select>
+<div id="salaryBox">
+<label class="fl">세전 월급 (만원) — 직접 입력</label>
+<input id="s_gross" type="number" inputmode="numeric">
+<label class="fl">부양가족 수 (본인 포함)</label>
+<select id="s_dep" onchange="calc()"><option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<p class="note">세전 월급에서 4대보험·소득세를 빼고 한 달 <b>실수령액</b>을 추정합니다. (2026년 요율 기준·참고용)</p>
+</div>
 <div id="jiipBox" style="display:none">
-<div class="hr"></div>
-<p class="note">지입·매출제는 <b>매출에서 비용을 뺀 순수입</b>이 실제 수입입니다. 아래는 차종별 일반 기본값이며 내 상황에 맞게 수정하세요. (단위: 만원/월)</p>
-<label class="fl">월 매출</label><input id="j_rev" type="number" inputmode="numeric">
+<label class="fl">월 매출 (만원)</label><input id="j_rev" type="number" inputmode="numeric">
 <label class="fl">유류비</label><input id="j_fuel" type="number" inputmode="numeric">
 <label class="fl">차량 할부·리스</label><input id="j_loan" type="number" inputmode="numeric">
 <label class="fl">보험료</label><input id="j_ins" type="number" inputmode="numeric">
 <label class="fl">정비·기타 (통행료·식대 등)</label><input id="j_etc" type="number" inputmode="numeric">
+<p class="note">매출에서 비용을 빼면 실제 <b>순수입</b>입니다. 차종 선택 시 일반 기본값이 채워지니 내 상황에 맞게 고치세요. (단위: 만원/월)</p>
 </div>
 </div>
 <div class="result">
-<div class="rlabel">예상 월수입</div>
+<div class="rlabel" id="rlabel">예상 실수령액 (월)</div>
 <div id="bigNum" class="big">—</div>
 <div id="subNum" class="sub"></div>
 <div id="breakdown" class="bd"></div>
 <a id="ctaBtn" class="cta" href="index.html">이 조건 화물기사 공고 보러가기 →</a>
 </div>
-<p class="disc">※ 본 계산기는 시장 일반 범위를 바탕으로 한 <b>참고용 추정치</b>입니다. 실제 수입은 물량·노선·운행시간·유가·차량 조건·계약 형태에 따라 크게 달라질 수 있습니다.</p>
+<p class="disc">※ 본 계산기는 2026년 4대보험 요율과 일반 세금 기준으로 한 <b>참고용 추정치</b>입니다. 실제 금액은 부양가족·비과세·각종 공제·물량·유가·계약 형태에 따라 달라질 수 있습니다.</p>
 </main>
 <footer class="pt-foot">
 <div><a href="index.html">화물구인구직 홈</a> · <a href="license-exam.html">자격증 모의시험</a> · <a href="play.html">플레이 상영관</a></div>
@@ -99,23 +94,32 @@ select,input[type=number]{width:100%;padding:12px;border:1px solid #cdd8ea;borde
 <div>© 2026 화물구인구직. All rights reserved.</div>
 </footer>
 <script>
-var T={base:{'1톤':[300,470],'1.4톤':[320,490],'2.5톤':[340,520],'5톤':[400,620],'11톤':[460,680],'25톤':[520,780]},route:{'시내·근거리':0.95,'권역·중거리':1.0,'전국·장거리':1.1,'새벽배송·택배':1.05,'고정노선':1.0},career:{'초보(1년 미만)':0.9,'1~3년':1.0,'3년 이상':1.1},jiip:{'1톤':{rev:550,fuel:90,loan:55,ins:15,etc:35},'1.4톤':{rev:620,fuel:110,loan:65,ins:17,etc:40},'2.5톤':{rev:720,fuel:140,loan:85,ins:20,etc:50},'5톤':{rev:950,fuel:200,loan:115,ins:28,etc:65},'11톤':{rev:1250,fuel:290,loan:165,ins:35,etc:85},'25톤':{rev:1550,fuel:390,loan:215,ins:45,etc:110}},land:{'1톤':'cargo-driver-1ton.html','1.4톤':'cargo-driver-1_4ton.html','2.5톤':'cargo-driver-2_5ton.html','5톤':'cargo-driver-5ton.html','11톤':'cargo-driver-11ton.html','25톤':'cargo-driver-25ton.html'}};
+var BASE_MID={'1톤':385,'1.4톤':405,'2.5톤':430,'5톤':510,'11톤':570,'25톤':650};
+var JIIP={'1톤':{rev:550,fuel:90,loan:55,ins:15,etc:35},'1.4톤':{rev:620,fuel:110,loan:65,ins:17,etc:40},'2.5톤':{rev:720,fuel:140,loan:85,ins:20,etc:50},'5톤':{rev:950,fuel:200,loan:115,ins:28,etc:65},'11톤':{rev:1250,fuel:290,loan:165,ins:35,etc:85},'25톤':{rev:1550,fuel:390,loan:215,ins:45,etc:110}};
+var LAND={'1톤':'cargo-driver-1ton.html','1.4톤':'cargo-driver-1_4ton.html','2.5톤':'cargo-driver-2_5ton.html','5톤':'cargo-driver-5ton.html','11톤':'cargo-driver-11ton.html','25톤':'cargo-driver-25ton.html'};
 function $(id){return document.getElementById(id);}
 function won(n){return Math.round(n).toLocaleString('ko-KR');}
-function r10(n){return Math.round(n/10)*10;}
+function m1(won){return (won/1e4).toFixed(1);}
 var mode='salary';
-function setMode(m){mode=m;$('tabSalary').className=(m==='salary'?'ct on':'ct');$('tabJiip').className=(m==='jiip'?'ct on':'ct');$('jiipBox').style.display=(m==='jiip'?'block':'none');if(m==='jiip')fillJiipDefaults();calc();}
-function fillJiipDefaults(){var d=T.jiip[$('truck').value];if(!d)return;$('j_rev').value=d.rev;$('j_fuel').value=d.fuel;$('j_loan').value=d.loan;$('j_ins').value=d.ins;$('j_etc').value=d.etc;}
-function calc(){var t=$('truck').value,rt=$('route').value,cr=$('career').value;$('ctaBtn').setAttribute('href',T.land[t]||'index.html');
-if(mode==='salary'){var b=T.base[t],m=T.route[rt]*T.career[cr];var lo=r10(b[0]*m),hi=r10(b[1]*m),mid=Math.round((lo+hi)/2);
-$('bigNum').textContent='약 '+lo+'~'+hi+'만원';
-$('subNum').textContent='월 평균 약 '+mid+'만원 · 연 환산 약 '+won(mid*12)+'만원';
-$('breakdown').innerHTML="<div class='br-row'><span>차종</span><b>"+t+"</b></div><div class='br-row'><span>운행 형태</span><b>"+rt+"</b></div><div class='br-row'><span>경력</span><b>"+cr+"</b></div>";
-}else{var rev=+$('j_rev').value||0,fuel=+$('j_fuel').value||0,loan=+$('j_loan').value||0,ins=+$('j_ins').value||0,etc=+$('j_etc').value||0;var cost=fuel+loan+ins+etc,net=rev-cost;
-$('bigNum').textContent='약 '+won(net)+'만원';
-$('subNum').textContent='연 환산 약 '+won(net*12)+'만원 · 일 평균 약 '+(net/26).toFixed(1)+'만원 (운행 26일)';
-$('breakdown').innerHTML="<div class='br-row'><span>월 매출</span><b>"+won(rev)+"만원</b></div><div class='br-row minus'><span>− 유류비</span><b>"+won(fuel)+"만원</b></div><div class='br-row minus'><span>− 차량 할부·리스</span><b>"+won(loan)+"만원</b></div><div class='br-row minus'><span>− 보험료</span><b>"+won(ins)+"만원</b></div><div class='br-row minus'><span>− 정비·기타</span><b>"+won(etc)+"만원</b></div><div class='br-row total'><span>= 예상 순수입</span><b>"+won(net)+"만원</b></div>";}}
-fillJiipDefaults();calc();
+function setMode(m){mode=m;$('tabSalary').className=(m==='salary'?'ct on':'ct');$('tabJiip').className=(m==='jiip'?'ct on':'ct');$('salaryBox').style.display=(m==='salary'?'block':'none');$('jiipBox').style.display=(m==='jiip'?'block':'none');$('rlabel').textContent=(m==='salary'?'예상 실수령액 (월)':'예상 순수입 (월)');prefill();calc();}
+function prefill(){var t=$('truck').value;if(mode==='salary'){$('s_gross').value=BASE_MID[t];}else{var d=JIIP[t];$('j_rev').value=d.rev;$('j_fuel').value=d.fuel;$('j_loan').value=d.loan;$('j_ins').value=d.ins;$('j_etc').value=d.etc;}}
+function eid(a){if(a<=5e6)return a*0.7;if(a<=15e6)return 3.5e6+(a-5e6)*0.4;if(a<=45e6)return 7.5e6+(a-15e6)*0.15;if(a<=1e8)return 12e6+(a-45e6)*0.05;return 14.75e6+(a-1e8)*0.02;}
+function prog(b){if(b<=14e6)return b*0.06;if(b<=50e6)return 0.84e6+(b-14e6)*0.15;if(b<=88e6)return 6.24e6+(b-50e6)*0.24;if(b<=150e6)return 15.36e6+(b-88e6)*0.35;if(b<=300e6)return 37.06e6+(b-150e6)*0.38;return 94.06e6+(b-300e6)*0.40;}
+function climit(a){if(a<=33e6)return 740000;if(a<=70e6)return Math.max(740000-(a-33e6)*0.008,660000);if(a<=12e7)return Math.max(660000-(a-70e6)*0.005,500000);return Math.max(500000-(a-12e7)*0.005,200000);}
+function calc(){var t=$('truck').value;$('ctaBtn').setAttribute('href',LAND[t]||'index.html');
+if(mode==='salary'){var g=(+$('s_gross').value||0)*1e4,dep=+$('s_dep').value||1;
+var np=Math.min(g,6370000)*0.0475,hi=g*0.03595,ltc=hi*0.1314,ei=g*0.009,four=np+hi+ltc+ei;
+var annual=g*12,earned=annual-eid(annual);var basis=Math.max(0,earned-1500000*dep-four*12);
+var ct=prog(basis);var cr=ct<=1300000?ct*0.55:715000+(ct-1300000)*0.30;cr=Math.min(cr,climit(annual));
+var dec=Math.max(0,ct-cr),itax=dec/12,local=itax*0.1,tot=four+itax+local,net=g-tot;
+$('bigNum').textContent='약 '+won(net/1e4)+'만원';
+$('subNum').textContent='세전 '+won(g/1e4)+'만원 · 공제 약 '+m1(tot)+'만원 · 연 환산 약 '+won(net*12/1e4)+'만원';
+$('breakdown').innerHTML="<div class='br-row'><span>세전 월급</span><b>"+won(g/1e4)+"만원</b></div><div class='br-row minus'><span>− 4대보험</span><b>"+m1(four)+"만원</b></div><div class='br-row minus'><span>− 소득세</span><b>"+m1(itax)+"만원</b></div><div class='br-row minus'><span>− 지방소득세</span><b>"+m1(local)+"만원</b></div><div class='br-row total'><span>= 실수령액</span><b>"+won(net/1e4)+"만원</b></div>";
+}else{var rev=+$('j_rev').value||0,fuel=+$('j_fuel').value||0,loan=+$('j_loan').value||0,ins=+$('j_ins').value||0,etc=+$('j_etc').value||0;var cost=fuel+loan+ins+etc,n=rev-cost;
+$('bigNum').textContent='약 '+won(n)+'만원';
+$('subNum').textContent='연 환산 약 '+won(n*12)+'만원 · 일 평균 약 '+(n/26).toFixed(1)+'만원 (운행 26일)';
+$('breakdown').innerHTML="<div class='br-row'><span>월 매출</span><b>"+won(rev)+"만원</b></div><div class='br-row minus'><span>− 유류비</span><b>"+won(fuel)+"만원</b></div><div class='br-row minus'><span>− 차량 할부·리스</span><b>"+won(loan)+"만원</b></div><div class='br-row minus'><span>− 보험료</span><b>"+won(ins)+"만원</b></div><div class='br-row minus'><span>− 정비·기타</span><b>"+won(etc)+"만원</b></div><div class='br-row total'><span>= 순수입</span><b>"+won(n)+"만원</b></div>";}}
+prefill();calc();
 </script>
 </body>
 </html>
