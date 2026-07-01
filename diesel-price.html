@@ -171,12 +171,21 @@ paintRegions(FALLBACK);
 fetch('fuel-prices.json?_='+Date.now()).then(r=>r.json()).then(function(j){
   var o=j.oil||{};
   [['diesel','경유'],['gasoline','휘발유'],['premium','고급휘발유'],['lpg','LPG']].forEach(function(k){
-    var d=o[k[0]]; if(!d)return;
+    var d=o[k[0]]; if(!d||!(d.price>0))return;
     document.getElementById('p-'+k[0]).innerHTML=won(d.price)+'<small> 원/L</small>';
     var el=document.getElementById('d-'+k[0]); var df=d.diff||0; var up=df>0;
     el.className='df '+(up?'up':'down'); el.textContent=(df===0?'– 전일 동일':(up?'▲':'▼')+' '+Math.abs(df).toFixed(2)+'원 (전일 대비)');
   });
-  if(j.sido && j.sido.length){ paintRegions(j.sido.map(function(s){return [s.name, s.price, s.diff];})); }
+  if(j.sido && j.sido.length){
+    var _fb={}; FALLBACK.forEach(function(f){_fb[f[0]]=f;});          // 표준 17개 시도(직전 정상값)
+    var _seen={}, _rows=[];
+    j.sido.forEach(function(s){                                        // 라이브 값 중 유효행만 채택
+      if(!(s.name in _fb) || !(s.price>0) || _seen[s.name]) return;    // 비표준("전남광주")·0가격·중복 제외
+      _seen[s.name]=1; _rows.push([s.name, s.price, s.diff]);
+    });
+    FALLBACK.forEach(function(f){ if(!_seen[f[0]]) _rows.push([f[0], f[1], 0]); }); // 결측 시도는 직전 정상값으로 보완
+    if(_rows.length) paintRegions(_rows);
+  }
   var date=(j.date||'').replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3');
   document.getElementById('meta').textContent='전국 평균 · 기준일 '+(date||j.updated||'')+' · 출처 오피넷(한국석유공사)';
 }).catch(function(){document.getElementById('meta').textContent='전국 평균 · 출처 오피넷(한국석유공사)';});
