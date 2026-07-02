@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://whdcks498.github.io/haegwang/</loc>
-    <lastmod>2026-07-01</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -51,7 +51,7 @@
   <url><loc>https://whdcks498.github.io/haegwang/taekbae-cargo-driver.html</loc><lastmod>2026-06-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <!-- 정보·콘텐츠 -->
   <url><loc>https://whdcks498.github.io/haegwang/guide.html</loc><lastmod>2026-06-22</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://whdcks498.github.io/haegwang/news.html</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://whdcks498.github.io/haegwang/news.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://whdcks498.github.io/haegwang/haegwangtoon.html</loc><lastmod>2026-06-25</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://whdcks498.github.io/haegwang/diesel-price.html</loc><lastmod>2026-06-16</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <!-- 매일 자동 SEO 글 -->
@@ -69,6 +69,7 @@
   <url><loc>https://whdcks498.github.io/haegwang/article-2026-06-21.html</loc><lastmod>2026-06-21</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://whdcks498.github.io/haegwang/article-2026-06-22.html</loc><lastmod>2026-06-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://whdcks498.github.io/haegwang/article-2026-06-23.html</loc><lastmod>2026-06-23</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://whdcks498.github.io/haegwang/article-2026-07-02.html</loc><lastmod>2026-07-02</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://whdcks498.github.io/haegwang/article-2026-07-01.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://whdcks498.github.io/haegwang/article-2026-06-30.html</loc><lastmod>2026-06-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://whdcks498.github.io/haegwang/article-2026-06-29.html</loc><lastmod>2026-06-29</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
