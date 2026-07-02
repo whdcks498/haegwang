@@ -1,0 +1,24 @@
+name: 오늘의 운세 자동 생성
+on:
+  schedule:
+    - cron: "5 15 * * *"   # 매일 00:05 KST (15:05 UTC)
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 오늘의 운세 페이지 생성
+        run: python3 gen_fortune.py
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add fortune.html
+          git diff --staged --quiet || git commit -m "오늘의 운세 자동 갱신 (auto)"
+          git push
