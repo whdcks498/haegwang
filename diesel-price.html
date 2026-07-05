@@ -140,10 +140,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고딕
 <script>
 // 시도별 경유 평균 (오피넷 기준, 기준일 표시는 fuel-prices.json date)
 var FALLBACK=[
- ["인천",1874.34,-1.00],["대전",1877.96,-5.00],["부산",1881.95,-2.56],["대구",1885.13,-3.67],
- ["울산",1887.20,-4.20],["광주",1894.37,0],["경기",1894.65,-3.16],["세종",1902.36,-1.09],
- ["경남",1909.69,-3.37],["전북",1909.86,-4.37],["충남",1912.75,-3.37],["경북",1915.54,-4.25],
- ["충북",1917.84,-3.97],["강원",1926.98,-5.21],["서울",1928.99,-1.80],["제주",1933.28,-3.60],["전남",1962.38,0]
+ ["대전",1860.53,-2.71],["인천",1862.40,0.13],["대구",1864.88,-0.73],["울산",1867.29,-1.00],
+ ["부산",1871.08,-0.65],["경기",1877.95,-0.89],["세종",1881.20,-0.94],["경남",1890.70,-1.46],
+ ["광주",1894.37,0],["전북",1894.63,-0.60],["경북",1895.08,-1.87],["충남",1895.40,-0.72],
+ ["충북",1900.14,-1.83],["강원",1905.66,-1.12],["서울",1916.20,-0.48],["제주",1922.14,-0.31],["전남",1962.38,0]
 ];
 function won(n){return n.toLocaleString('ko-KR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function diffHtml(d){if(d===0||d==null)return '<span style="color:#94a3b8">–</span>';var up=d>0;return '<span class="d '+(up?'up':'down')+'" style="color:'+(up?'#c0392b':'#1f8a53')+'">'+(up?'▲':'▼')+Math.abs(d).toFixed(2)+'</span>';}
@@ -203,7 +203,7 @@ fetch('fuel-prices.json?_='+Date.now()).then(r=>r.json()).then(function(j){
 </style>
 <div class="m-callbar">
   <a class="mc-call" href="tel:01072333916">📞 전화 문의</a>
-  <a class="mc-resume" href="https://forms.gle/HixdqkYMSfwD1kyH7" target="_blank" rel="noopener">📝 이력서 등록</a>
+  <a class="mc-resume" href="https://forms.gle/GNssyaq362VDPsbT8" target="_blank" rel="noopener">📝 이력서 등록</a>
 </div>
 </body>
 </html>
